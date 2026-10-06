@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Collect hiero-ledger GitHub activity for a time window, as compact text.
 
-Usage:
-    python3 fetch_activity.py              # last 24h (72h on Mondays, to cover the weekend)
-    python3 fetch_activity.py --hours 168  # last week
-    python3 fetch_activity.py --no-me      # skip the personal "your queue" section
+Usage (from the repo root):
+    python3 .claude/scripts/fetch_activity.py               # last 24h (72h on Mondays)
+    python3 .claude/scripts/fetch_activity.py --hours 168   # last week
+    python3 .claude/scripts/fetch_activity.py --user jexsie # queue for a named user
+    python3 .claude/scripts/fetch_activity.py --no-me       # skip the "your queue" section
+
+In GitHub Actions, pass --user: there `@me` would mean the Actions bot, not you.
 
 Requires the GitHub CLI (gh), authenticated via `gh auth login` or a GH_TOKEN env var.
 Edit WATCHLIST below to change which repos get full detail.
@@ -156,6 +159,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--hours", type=int, default=None)
     parser.add_argument("--no-me", action="store_true", help="skip the personal queue section")
+    parser.add_argument("--user", default="@me",
+                        help="GitHub login for the queue section (default: the authenticated user)")
     args = parser.parse_args()
 
     now = datetime.now(timezone.utc)
@@ -211,13 +216,13 @@ def main():
     print("  " + (", ".join(f"{r}: {n}" for r, n in counts.most_common()) or "none"))
 
     if not args.no_me:
-        print("\n== YOUR QUEUE ==")
+        print(f"\n== YOUR QUEUE ({args.user}) ==")
         for label, items in [
-            ("Review requested from you", search("prs", "--owner", ORG, "--review-requested", "@me",
+            ("Review requested from you", search("prs", "--owner", ORG, "--review-requested", args.user,
                                                  "--state", "open", fields=PR_FIELDS)),
-            ("Assigned to you", search("issues", "--owner", ORG, "--assignee", "@me", "--state", "open",
+            ("Assigned to you", search("issues", "--owner", ORG, "--assignee", args.user, "--state", "open",
                                        "--include-prs")),
-            ("Mentioned you in window", search("issues", "--owner", ORG, "--mentions", "@me",
+            ("Mentioned you in window", search("issues", "--owner", ORG, "--mentions", args.user,
                                                "--updated", window, "--include-prs")),
         ]:
             print(f"{label}: {len(items)}")
