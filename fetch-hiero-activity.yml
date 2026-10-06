@@ -1,0 +1,46 @@
+name: Fetch Hiero activity
+
+# Collects hiero-ledger issues, PRs and releases and commits them to data/YYYY-MM-DD.txt.
+# The Claude routine reads that file at 06:00 and writes the digest.
+# Runs here (not in the routine) because cloud routines can't reach repos outside the session.
+
+on:
+  schedule:
+    # 02:00 UTC = 05:00 in Kampala (EAT, UTC+3). Weekdays only; the script looks back
+    # 72h on Mondays to cover the weekend. GitHub may start scheduled jobs a few minutes late.
+    - cron: "0 2 * * 1-5"
+  workflow_dispatch: # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write # needed to commit the data file
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch activity
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p data
+          python3 .claude/scripts/fetch_activity.py --user jexsie > "data/$(date -u +%F).txt"
+
+      - name: Commit data file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git commit -m "Hiero activity $(date -u +%F)" || echo "Nothing to commit"
+          git push
+
+      - name: Fail the job if every GitHub request failed
+        # Runs after the commit, so the routine still sees the error in the file,
+        # and GitHub emails you about the failed job.
+        run: |
+          if grep -q '^ERROR' "data/$(date -u +%F).txt"; then
+            cat "data/$(date -u +%F).txt"
+            exit 1
+          fi
