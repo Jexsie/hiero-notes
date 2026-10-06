@@ -1,83 +1,155 @@
 ---
 name: hiero-daily-overview
-description: Builds a daily (or weekly) digest of what is moving in the Hiero project on GitHub (hiero-ledger org) — new ideas and proposals, HIP status changes, features being implemented, things changed, deprecated or removed, and releases — across the SDKs (Java, JS, Go, Python, Rust, C++, Swift), sdk-collaboration-hub, hiero-improvement-proposals, hiero-sdk-tck, solo, hiero-solo-action, mirror node, block node and the rest of the org. Use this skill whenever the user asks for their Hiero overview, update, digest, briefing or catch-up, asks "what's new in Hiero", what happened in the SDKs, solo, mirror node or block node, which HIPs moved, or wants to review hiero-ledger issues and PRs — even if they don't say "overview".
+description: Builds a daily (or weekly) Hiero briefing from hiero-ledger GitHub data — everything going on across the org (discussions, new ideas, HIPs, features, changes, deprecations, releases), a deep dive into the user's focus repos (JS SDK, TCK, Java SDK, Solo, Solo Action, JSON-RPC relay), the status of their own PRs and threads, and specific contribution suggestions in those focus repos. Use this skill whenever the user asks for their Hiero overview, digest, briefing or catch-up, asks what to work on or contribute to in Hiero, what's happening in any Hiero repo or discussion, which HIPs moved, or wants to review hiero-ledger issues and PRs — even if they don't say "overview".
 ---
 
 # Hiero daily overview
 
-The reader wants to follow the *direction* of the Hiero project: which ideas are being proposed, what is planned, what is being built, what shipped, and what is changing or going away. This is not a full activity log. Bug fixes, tests, CI, dependency bumps and beginner issues are background unless they change behavior, so they get counted rather than listed. A good digest lets the reader understand the day in two or three minutes and click through to anything they want to follow.
+The briefing has three jobs:
 
-## Step 1: Collect the data
+1. **Keep the user updated on everything going on in Hiero:** discussions, new ideas, proposals, HIPs, features being built, things changed, deprecated or removed, and releases, across the whole org.
+2. **Show what is being worked on and what is still to be done** in the focus repos.
+3. **Suggest specific contributions**, only in the focus repos, that the user could start on.
 
-Run the bundled script from this skill's directory:
+## Contributor profile
+
+Use this to judge what fits. The user can edit it; prefer it over guesses.
+
+- GitHub user: jexsie
+- Focus repos: hiero-sdk-js, hiero-sdk-tck, hiero-sdk-java, solo, hiero-solo-action, hiero-json-rpc-relay
+- Strengths: TypeScript and JavaScript; Java for the Java SDK
+- Comfortable with: intermediate issues; open to larger HIP implementation work
+- Interests: SDK features, TCK parity, HIP implementations, developer tooling (Solo, Solo Action), EVM compatibility (relay)
+
+## Step 1: Get the data
+
+All paths are relative to the repo root.
+
+**In a cloud routine, read the prepared data file.** A GitHub Action in this repo (`.github/workflows/fetch-hiero-activity.yml`) runs the fetch script at 05:00 Kampala time on weekdays and commits the output to `data/YYYY-MM-DD.txt`. Read today's file, using today's date in Africa/Kampala time. Don't run the script, call the GitHub API, or clone hiero-ledger repos in this mode. Cloud sessions can only reach the repos attached to them, and a digest built from commit logs misses what matters most here (open issues, PRs, discussions, claims).
+
+- If today's file is missing, use the newest file in `data/` and say at the top which date the data is from.
+- If `data/` has no files at all, send a short message saying the GitHub Action hasn't produced data yet, with a link to the repo's Actions tab, and stop.
+
+**Locally, run the script yourself:**
 
 ```bash
-python3 scripts/fetch_activity.py            # last 24h (72h on Mondays)
-python3 scripts/fetch_activity.py --hours 168  # "this week"
+python3 .claude/scripts/fetch_activity.py              # last 24h (72h on Mondays)
+python3 .claude/scripts/fetch_activity.py --hours 168  # "this week"
 ```
 
-Pick `--hours` from the request: "since yesterday" → default, "this week" → 168, "since Friday" → count the hours. Add `--no-me` if the user only wants project news.
+Pick `--hours` from the request ("this week" → 168). If `gh` is missing or every request fails, tell the user how to fix it (`gh auth login`) and stop. Locally you can also read more about a promising item with `gh issue view <n> --repo hiero-ledger/<repo> --comments`.
 
-The script searches the whole hiero-ledger org, so new or unlisted repos are included automatically. It prints sections for releases, new issues, new PRs, merged PRs, closed issues, older HIP and SDK-hub discussions that were active in the window, bot counts, the user's own queue, and any warnings. Watchlist repos get title, labels and a body excerpt; other repos get titles only.
+If the data contains an ERROR line or a WARNINGS section, mention it at the top of the briefing so the reader knows something may be missing.
 
-If the script says `gh` is not authenticated or not installed, stop and tell the user how to fix it (`gh auth login`, or a `GH_TOKEN` variable in a routine environment). Never fill a digest with guessed activity. If the output has a WARNINGS section, mention it in the digest footer so the reader knows the data may be incomplete.
+## Step 2: Understand the data
 
-When a title is vague but the item looks significant (HIP-related, labeled breaking, touching several SDKs), read more with `gh pr view <n> --repo hiero-ledger/<repo> --json title,body,files` or `gh issue view`. Do this for at most about ten items, choosing the ones most likely to matter.
+The file has these sections:
 
-## Step 2: Classify each human item
+- **RELEASES, NEW ISSUES, NEW PULL REQUESTS, MERGED PULL REQUESTS, CLOSED ISSUES:** activity in the time window across the whole hiero-ledger org. Watchlist repos have longer excerpts; other repos have shorter ones.
+- **ONGOING DISCUSSIONS:** older issues and PRs in the HIP and SDK-hub repos with new activity.
+- **DISCUSSIONS:** GitHub Discussions created (NEW) or with new replies in the window, with category and an excerpt. New ideas often start here.
+- **FOCUS REPO: \<repo\>** (one per focus repo): every open human PR with review state, age, idle days and size; open issues active in the last 30 days (assignee or UNASSIGNED, labels, milestone, comments; `NEW` marks issues created in the window); a summary of older open issues; open milestones; and the last 20 merges.
+- **SDK PARITY:** human PRs merged in each SDK and the TCK over the last 30 days.
+- **YOUR WORK:** the user's open PRs with review decision and latest reviews, review requests, assignments, and threads they're involved in that have new activity.
+- **CONTRIBUTION CANDIDATES:** for each focus repo, the top unassigned, unblocked open issues. Each has a STATUS: `looks free`, `POSSIBLY CLAIMED by <user> <n>d ago` (someone asked to work on it in a comment), or `OPEN PR LINKED` (someone already has a PR). The last two comments are included.
 
-Put each item into exactly one category. Labels, the conventional-commit prefix in PR titles, and wording are the main signals.
+## Step 3: Pick contribution suggestions
 
-| Category | Typical signals |
-|---|---|
-| New idea / proposal | New issues or PRs in hiero-improvement-proposals or sdk-collaboration-hub; labels like enhancement, feature, proposal, RFC, design, discussion; titles starting with "Proposal", "RFC", "Design", "Idea", "Should we" |
-| Being implemented | Open PRs with `feat:` or that reference a HIP (`HIP-1234`) or a feature issue |
-| Shipped | Merged `feat:` PRs and releases |
-| Changed | `refactor:`/`perf:` PRs or anything that changes defaults, configuration, public API signatures, CLI flags, protobuf/HAPI versions or observable behavior |
-| Deprecated, removed, breaking | `!` after the type (`feat!:`), "BREAKING CHANGE", breaking labels, or words like deprecate, remove, drop support, delete, sunset, rename, migrate |
-| Background | Bug fixes, tests, CI, docs, chores, dependency bumps, good-first-issue tasks. Count these unless one reveals something above, such as a fix that changes behavior or docs for a new feature |
+Suggest only work in the focus repos. Aim for one or two per focus repo where something good exists (about 5–8 in total), and skip a repo rather than padding it with weak picks.
 
-Look for patterns across repos. When the same HIP or feature shows up in several SDK repos, or in the TCK and SDKs together, it is a coordinated rollout. Combine it into one line showing each SDK's state, for example "HIP-1234 (batch transactions): Java merged, JS PR open, Go and Python issue only, TCK tests open". These lines are often the most useful part of the digest because they show where the project is heading as a whole.
+- **Only suggest work that is actually available.** `OPEN PR LINKED` items are taken. A `POSSIBLY CLAIMED` item is taken if the claim is recent (about two weeks or less). An older claim with no linked PR can be suggested as "ask whether it's still being worked on", and say so explicitly.
+- **Rank by** fit with the contributor profile, availability, maintainer signal (a help-wanted or skill label, or a maintainer comment inviting PRs), impact (HIP work, TCK or SDK parity, an upcoming milestone), and how much effort the size suggests.
+- **Find parity gaps for the JS and Java SDKs.** Compare SDK PARITY with their focus-repo sections. If a feature or TCK method merged in two or more other SDKs and the JS or Java SDK has no matching merged PR, open PR or open issue, that's a strong suggestion. The first step is usually to open an issue that links the other SDKs' PRs as a reference.
+- **Include a review suggestion when there is a good one.** Reviewing is a real contribution and keeps the user close to the codebase. Pick an open focus-repo PR that is ready (not draft), has no review decision, has been idle 3+ days, and is small enough to review in one sitting (roughly under 300 changed lines).
 
-For HIPs, report any visible status transition (for example into Last Call, Accepted, Final, or Rejected), new HIP drafts, and HIPs with heavy discussion in the window. If a status change is not clear from the title, read the PR's changed files to see the new `status:` value before reporting it.
+For each suggestion, write:
 
-Repos outside the watchlist (consensus node, JSON-RPC relay, CLI, and others) can be very busy. From those, include only new proposals, HIP-related work, deprecations or breaking changes, and releases.
+1. A plain description of the work, with the link.
+2. Why it fits the user.
+3. Its status: who opened it, how recent, any claim or maintainer comment.
+4. A concrete first step. Examples: "comment asking to be assigned", "read the Java implementation in <link> as a reference", "check the TCK spec for the method".
+5. A rough size, and what it's based on (label, scope, reference implementation).
 
-## Step 3: Write the digest
+## Step 4: Write the briefing
 
-Use this structure, and leave out any section that is empty (except TL;DR):
+Use this structure, leaving out empty sections (except the TL;DR):
 
 ```markdown
-# Hiero overview — {weekday, date} ({window, e.g. "last 24h"})
+# Hiero briefing — {weekday, date} ({window})
 
 **TL;DR**
-- 3–5 bullets with the direction-level news. If nothing notable happened, say it was a quiet day.
 
-## New ideas & proposals
-## HIP tracker
+- 4–6 bullets: the most important news across Hiero, anything in YOUR WORK that needs action, and the best contribution opportunity.
+
+## Your work
+
+- PRs with changes requested or new review comments first, then PRs waiting for review (with idle days), then review requests, then threads with new replies.
+
+## Where you can contribute
+
+### JS SDK / TCK / Java SDK / Solo / Solo Action / JSON-RPC Relay
+
+(the suggestions from Step 3, grouped under each focus repo that has any)
+
+## Everything going on in Hiero
+
+### Discussions & new ideas
+
+- New GitHub Discussions, SDK-hub proposals, RFC/design issues, and active threads, with a line on what's being debated.
+
+### HIP tracker
+
 | HIP | Title | What happened |
-## Cross-SDK rollouts
-## In progress
-## Shipped
-(releases first, then notable merged features)
-## Changed
-## Deprecated, removed, breaking
-## Your queue
+
+### Being built
+
+- Open feature work and cross-SDK rollouts (combine one HIP or feature across SDKs into one line showing each SDK's state).
+
+### Shipped
+
+- Releases first, then notable merged features.
+
+### Changed
+
+### Deprecated, removed, breaking
+
+### Other repos
+
+- Anything notable from repos not covered above (consensus node, CLI, explorer, governance and others).
+
+## Focus repos
+
+### {repo} (one block per focus repo)
+
+- **In progress:** open PRs that matter, especially ready but unreviewed, changes requested and idle, or approved but not merged. Give a count of stale drafts rather than listing them.
+- **To be done:** open issues grouped into themes that fit the data (e.g. HIP implementations, TCK, bugs, features and DX, docs, deprecations), with a count per theme and the 1–3 most notable items. Flag unassigned ones and what's in the next milestone.
+- **Recently shipped:** what recent merges changed for users.
+- **Parity gaps** (JS and Java SDKs only): features or TCK methods landed elsewhere but missing here.
+
 ## Background
+
 One line, e.g. "Also: 9 bug fixes, 31 dependency bumps, 14 good-first-issues across 6 repos."
 ```
 
-How to write each line:
+The user wants to know about anything going on, so it's fine for "Everything going on" to be long. Still keep each item to one line, and put the most important items first in each section.
 
-- Start with the short repo name in bold: **Java SDK**, **JS SDK**, **Go SDK**, **Python SDK**, **Rust SDK**, **C++ SDK**, **Swift SDK**, **TCK**, **HIPs**, **SDK hub**, **Solo**, **Solo Action**, **Mirror Node**, **Block Node**, **Consensus Node**, **Relay**. For other repos, use the repo name.
-- Rewrite the title in plain words that say what changes and why it matters, then add the link. For example, "**Solo** — new `--dev` flag to start a single-node network in one command ([#123](url))" is more useful than repeating "feat: add dev mode".
-- Don't invent impact. If the title and excerpt don't make it clear, say "details unclear from the title" so the reader knows to click through.
-- Show the queue under "Your queue" only. Don't repeat those items elsewhere unless they also belong in one of the news sections.
+**How to classify activity:** new HIPs, SDK-hub issues, discussions and proposal/RFC/design items are **new ideas**; open `feat:` or HIP-referencing PRs are **being built**; merged features and releases are **shipped**; `refactor`/`perf` or changes to defaults, config, APIs or CLI flags are **changes**; `!`, BREAKING CHANGE, deprecate, remove, drop support, rename or migrate are **deprecations and breaking changes**. Bug fixes, tests, CI, docs, dependency bumps and beginner issues go in the background count unless they change behavior.
 
-## Delivering the digest
+**How to write each line:**
 
-If the user or the routine prompt says where to deliver it (a Slack DM, a file, a GitHub issue), deliver it there. If nothing is said, reply in chat. When saving to a file, use `hiero-overview/YYYY-MM-DD.md` so that past days stay easy to compare.
+- Always use full links. Issues and PRs: `https://github.com/hiero-ledger/<repo>/issues/<number>` (this also works for PRs). Discussions: use the URL from the data. Never write a bare `#123`, because GitHub and Slack link bare numbers to whatever repo the message is shown in.
+- Start with the short repo name in bold: **JS SDK**, **Java SDK**, **Go SDK**, **Python SDK**, **Rust SDK**, **C++ SDK**, **Swift SDK**, **TCK**, **HIPs**, **SDK hub**, **Solo**, **Solo Action**, **Relay**, **Mirror Node**, **Block Node**, **Consensus Node**. For other repos, use the repo name.
+- Rewrite titles in plain words that say what changes and why it matters.
+- Don't invent detail. If the title and excerpt don't make something clear, say "details unclear from the title".
+
+## Delivering the briefing
+
+Deliver it where the user or the routine prompt says (Slack DM, file, chat). If nothing is said, reply in chat. In Slack, send it as three messages so each stays readable:
+
+1. TL;DR, your work, and where you can contribute
+2. Everything going on in Hiero
+3. Focus repos and background
 
 ## Customizing
 
-The watchlist, the repos checked for releases, and the bot/noise filters are constants at the top of `scripts/fetch_activity.py`. When the user wants to follow a different set of repos, edit those lists rather than adding special cases to these instructions.
+The lists at the top of `.claude/scripts/fetch_activity.py` control the watchlist, the focus repos (`FOCUS_REPOS`), and the parity comparison. Edit them rather than adding special cases here. Update the contributor profile above when the user's skills or interests change.
