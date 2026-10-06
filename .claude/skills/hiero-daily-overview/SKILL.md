@@ -144,11 +144,20 @@ The user wants to know about anything going on, so it's fine for "Everything goi
 
 ## Delivering the briefing
 
-Deliver it where the user or the routine prompt says (Slack DM, file, chat). If nothing is said, reply in chat. In Slack, send it as three messages so each stays readable:
+**When running locally, always save the briefing to a file** as well as showing it in chat, so past briefings stay easy to look back on. To tell where you are running, check `CLAUDE_CODE_REMOTE`: it is `true` in cloud sessions and unset locally.
+
+1. Write the full briefing to `briefings/YYYY-MM-DD.md` at the repo root, using today's date in Africa/Kampala time. If the user asked for a different window (for example "this week"), add it to the name, e.g. `briefings/2026-10-06-week.md`. Overwrite the file if it already exists for that day.
+2. Make sure the folder is ignored by git, because the briefings are personal notes and should never be committed. Check with `git check-ignore -q briefings/`. If that fails, add a `briefings/` line to `.gitignore`.
+3. Use markdown links with full URLs in the file, e.g. `[Solo Action #84](https://github.com/hiero-ledger/hiero-solo-action/issues/84)`, so every item is clickable when the file is opened later.
+4. After saving, tell the user the file path in one line.
+
+**In a cloud routine, don't write or commit files**, because the routine is read-only. Deliver where the routine prompt says. In Slack, send the briefing as three messages so each stays readable:
 
 1. TL;DR, your work, and where you can contribute
 2. Everything going on in Hiero
 3. Focus repos and background
+
+If nothing says where to deliver, reply in chat.
 
 ## Customizing
 
