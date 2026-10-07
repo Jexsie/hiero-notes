@@ -33,8 +33,8 @@ All paths are relative to the repo root.
 **Locally, run the script yourself:**
 
 ```bash
-python3 .claude/scripts/fetch_activity.py              # last 24h (72h on Mondays)
-python3 .claude/scripts/fetch_activity.py --hours 168  # "this week"
+python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py              # last 24h (72h on Mondays)
+python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --hours 168  # "this week"
 ```
 
 Pick `--hours` from the request ("this week" → 168). If `gh` is missing or every request fails, tell the user how to fix it (`gh auth login`) and stop. Locally you can also read more about a promising item with `gh issue view <n> --repo hiero-ledger/<repo> --comments`.
@@ -147,9 +147,10 @@ The user wants to know about anything going on, so it's fine for "Everything goi
 **When running locally, always save the briefing to a file** as well as showing it in chat, so past briefings stay easy to look back on. To tell where you are running, check `CLAUDE_CODE_REMOTE`: it is `true` in cloud sessions and unset locally.
 
 1. Write the full briefing to `briefings/YYYY-MM-DD.md` at the repo root, using today's date in Africa/Kampala time. If the user asked for a different window (for example "this week"), add it to the name, e.g. `briefings/2026-10-06-week.md`. Overwrite the file if it already exists for that day.
-2. Make sure the folder is ignored by git, because the briefings are personal notes and should never be committed. Check with `git check-ignore -q briefings/`. If that fails, add a `briefings/` line to `.gitignore`.
-3. Use markdown links with full URLs in the file, e.g. `[Solo Action #84](https://github.com/hiero-ledger/hiero-solo-action/issues/84)`, so every item is clickable when the file is opened later.
-4. After saving, tell the user the file path in one line.
+2. Briefings are committed and published. When `briefings/` changes on `main`, `.github/workflows/deploy-site.yml` rebuilds the public GitHub Pages site in `site/`. Don't commit or push the file yourself unless the user asks. Remember that anything in a briefing becomes public once it's pushed.
+3. Keep the structure from Step 4, because the site parses it. The `# ` title ends with the window in parentheses, the TL;DR is a `**TL;DR**` line followed by `- ` bullets, sections are `## `, and subsections are `### `. In "Where you can contribute", each suggestion is a numbered item.
+4. Use markdown links with full URLs in the file, e.g. `[Solo Action #84](https://github.com/hiero-ledger/hiero-solo-action/issues/84)`, so every item is clickable and the site can tag it by repo.
+5. After saving, tell the user the file path in one line.
 
 **In a cloud routine, don't write or commit files**, because the routine is read-only. Deliver where the routine prompt says. In Slack, send the briefing as three messages so each stays readable:
 
@@ -161,4 +162,4 @@ If nothing says where to deliver, reply in chat.
 
 ## Customizing
 
-The lists at the top of `.claude/scripts/fetch_activity.py` control the watchlist, the focus repos (`FOCUS_REPOS`), and the parity comparison. Edit them rather than adding special cases here. Update the contributor profile above when the user's skills or interests change.
+The lists at the top of `.claude/skills/hiero-daily-overview/scripts/fetch_activity.py` control the watchlist, the focus repos (`FOCUS_REPOS`), and the parity comparison. Edit them rather than adding special cases here. Update the contributor profile above when the user's skills or interests change.

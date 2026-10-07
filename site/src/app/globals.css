@@ -1,0 +1,366 @@
+@import "tailwindcss";
+
+/* ── Tokens ───────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light dark;
+  --paper: light-dark(#f2ede1, #13120f);
+  --paper-deep: light-dark(#e9e2d2, #1c1a16);
+  --ink: light-dark(#16140f, #ebe4d3);
+  --muted: light-dark(#6b6457, #9a917f);
+  --rule: light-dark(#c9bfab, #3b372f);
+  --accent: light-dark(#c8361a, #ff6a45);
+  --t-ideas: light-dark(#a8700b, #e0a93c);
+  --t-hips: light-dark(#16140f, #ebe4d3);
+  --t-building: light-dark(#1f4bb8, #7c9cff);
+  --t-shipped: light-dark(#2e6b3f, #6cc287);
+  --t-breaking: light-dark(#c8361a, #ff6a45);
+  --t-changed: light-dark(#5a5446, #b5ad9b);
+  --t-other: light-dark(#8a8273, #7d7564);
+  --r-js: light-dark(#b9770e, #e6a73a);
+  --r-java: light-dark(#a3372a, #ee7a68);
+  --r-tck: light-dark(#1f4bb8, #7c9cff);
+  --r-solo: light-dark(#2e7d4f, #6cc287);
+  --r-action: light-dark(#0f7c80, #4cc3c4);
+  --r-relay: light-dark(#4b5d73, #9fb2c9);
+  --r-other: light-dark(#b3aa98, #59534a);
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --font-display: var(--font-bodoni), "Bodoni 72", Didot, Georgia, serif;
+  --font-serif: var(--font-newsreader), Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+/* ── Page ─────────────────────────────────────────────────────────────── */
+
+html {
+  background: var(--paper);
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  font-optical-sizing: auto;
+  min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Newsprint grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0 0.18 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.masthead {
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 96;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.theme-label-dark { display: none; }
+:root[data-theme="dark"] .theme-label-light { display: none; }
+:root[data-theme="dark"] .theme-label-dark { display: inline; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-label-light { display: none; }
+  :root:not([data-theme="light"]) .theme-label-dark { display: inline; }
+}
+
+/* ── Load-in ──────────────────────────────────────────────────────────── */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes grow {
+  from { transform: scaleX(0); }
+}
+
+.reveal {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+.lens-bar {
+  animation: grow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .lens-bar { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ── Markdown base ────────────────────────────────────────────────────── */
+
+.md { line-height: 1.55; }
+.md > * + * { margin-top: 0.7em; }
+.md p { text-wrap: pretty; }
+.md strong { font-weight: 650; }
+.md em { font-style: italic; }
+.md code {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  background: var(--paper-deep);
+  padding: 0.05em 0.3em;
+  border-radius: 2px;
+  overflow-wrap: anywhere;
+}
+.md a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--rule);
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+.md a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+/* GitHub references carry their repo's colour */
+.md a.ref {
+  text-decoration-color: var(--ref);
+  text-decoration-thickness: 2px;
+}
+.md a.ref:hover { color: var(--ref); }
+
+.md ul, .md ol { padding-left: 1.15em; }
+.md ul { list-style: none; }
+.md ul > li { position: relative; }
+.md ul > li::before {
+  content: "";
+  position: absolute;
+  left: -0.95em;
+  top: 0.68em;
+  width: 0.38em;
+  height: 0.38em;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+.md ul ul > li::before { background: transparent; border: 1px solid var(--muted); }
+.md li + li { margin-top: 0.55em; }
+.md li > ul, .md li > ol { margin-top: 0.45em; }
+.md ol { list-style: decimal; }
+.md ol > li::marker { font-family: var(--font-display); color: var(--accent); }
+
+.md blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+.table-wrap { overflow-x: auto; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+.md table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.md th {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--ink);
+}
+.md td { padding: 0.7rem 0.75rem; border-top: 1px dotted var(--rule); vertical-align: top; }
+.md tr:first-child td { border-top: 0; }
+.md td:first-child { font-family: var(--font-display); white-space: nowrap; font-size: 1.05rem; }
+
+/* ── Repo lens: dim what doesn't match ───────────────────────────────── */
+
+#edition [data-repos], #edition .brief, #edition .brief-lead, #edition .md li, #edition .md tr {
+  transition: opacity 0.25s ease, background-color 0.25s ease;
+}
+#edition[data-lens] .brief:not([data-hit]),
+#edition[data-lens] .brief-lead:not([data-hit]),
+#edition[data-lens] .md li:not([data-hit]),
+#edition[data-lens] .md tr:not([data-hit]) {
+  opacity: 0.22;
+}
+#edition[data-lens] .md li[data-hit] li:not([data-hit]) { opacity: 1; }
+
+/* ── Front page ───────────────────────────────────────────────────────── */
+
+.md-lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 2.6vw, 2.3rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+}
+.md-lead strong { font-weight: 700; font-style: italic; }
+.md-lead a.ref { text-decoration-thickness: 3px; }
+
+.brief {
+  position: relative;
+  padding: 1.25rem 1.25rem 1.25rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.brief::before {
+  content: attr(data-n);
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+@media (min-width: 768px) {
+  .brief:nth-child(even) { padding-left: 1.5rem; border-left: 1px solid var(--rule); }
+}
+.md-brief { font-size: 1rem; line-height: 1.5; }
+.md-brief strong:first-child { font-family: var(--font-display); font-size: 1.15rem; display: block; line-height: 1.25; margin-bottom: 0.2rem; }
+
+.toc-link {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr auto;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.55rem 0;
+  font-size: 1.02rem;
+  transition: padding 0.2s ease, color 0.2s;
+}
+.toc-link:hover { padding-left: 0.4rem; color: var(--accent); }
+
+.editor-note {
+  background: var(--paper-deep);
+  border-left: 3px solid var(--accent);
+  padding: 0.9rem 1rem;
+}
+.md-note { font-size: 0.9rem; line-height: 1.5; font-style: italic; }
+
+/* ── Your work ────────────────────────────────────────────────────────── */
+
+.md-work > ul > li {
+  padding: 0.85rem 0 0.85rem 0.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.md-work > ul > li + li { margin-top: 0; }
+.md-work > ul > li::before { top: 1.53em; }
+.md-work > ul > li > strong:first-child,
+.md-work > ul > li > p:first-child > strong:first-child {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+/* ── Where you can contribute: "lots", like classified ads ───────────── */
+
+.lot { border-top: 6px solid var(--tone); }
+.lot-title {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--tone);
+  color: var(--paper);
+  padding: 0.3rem 0.65rem 0.25rem;
+  margin-bottom: 1rem;
+}
+.md-contribute > ol { list-style: none; padding-left: 0; counter-reset: lot; }
+.md-contribute > ol > li {
+  counter-increment: lot;
+  position: relative;
+  border: 1px solid var(--ink);
+  padding: 1rem 1.1rem 1.05rem 3.4rem;
+  background: color-mix(in srgb, var(--paper-deep) 55%, transparent);
+}
+.md-contribute > ol > li + li { margin-top: 0.9rem; }
+.md-contribute > ol > li::before {
+  content: counter(lot);
+  position: absolute;
+  left: 0.85rem;
+  top: 0.55rem;
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--tone);
+}
+.md-contribute > ol > li > p:first-child,
+.md-contribute > ol > li:not(:has(> p)) {
+  font-size: 1.05rem;
+}
+.md-contribute > ol > li > p:first-child strong { font-family: var(--font-display); font-size: 1.15rem; }
+.md-contribute ul { font-size: 0.93rem; margin-top: 0.6rem; }
+.md-contribute ul > li + li { margin-top: 0.3rem; }
+.md-contribute ul > li::before { background: var(--tone); }
+.md-contribute em { font-style: normal; font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+.md-contribute > ul { font-size: 1rem; }
+
+/* ── Everything going on: newspaper columns ──────────────────────────── */
+
+.news-cols { columns: 1; column-gap: 3rem; column-rule: 1px solid var(--rule); }
+@media (min-width: 900px) { .news-cols { columns: 2; } }
+.news-sub { margin-bottom: 2.5rem; }
+.news-sub .md li { break-inside: avoid; }
+.news-head { break-after: avoid; }
+
+.stamp {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tone-c);
+  border: 1.5px solid var(--tone-c);
+  padding: 0.2rem 0.45rem 0.15rem;
+  transform: rotate(-2deg);
+}
+.news-sub[data-tone="ideas"] { --tone-c: var(--t-ideas); }
+.news-sub[data-tone="hips"] { --tone-c: var(--t-hips); }
+.news-sub[data-tone="building"] { --tone-c: var(--t-building); }
+.news-sub[data-tone="shipped"] { --tone-c: var(--t-shipped); }
+.news-sub[data-tone="breaking"] { --tone-c: var(--t-breaking); }
+.news-sub[data-tone="changed"] { --tone-c: var(--t-changed); }
+.news-sub[data-tone="other"] { --tone-c: var(--t-other); }
+.news-sub .md ul > li::before { background: var(--tone-c); }
+.news-sub[data-tone="breaking"] .md { border-left: 3px solid var(--t-breaking); padding-left: 1rem; }
+.md-news { font-size: 0.98rem; }
+
+/* ── Focus repos ──────────────────────────────────────────────────────── */
+
+.focus-card { border-top: 3px solid var(--tone); padding-top: 0.75rem; }
+.focus-card h3 { color: var(--tone); }
+.md-focus { font-size: 0.97rem; margin-top: 0.75rem; }
+.md-focus > ul > li > strong:first-child,
+.md-focus > ul > li > p:first-child > strong:first-child {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--tone);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.md-focus > ul > li::before { background: var(--tone); }
+
+/* ── Background ───────────────────────────────────────────────────────── */
+
+.md-background { font-style: italic; font-size: 1.1rem; color: var(--muted); }
