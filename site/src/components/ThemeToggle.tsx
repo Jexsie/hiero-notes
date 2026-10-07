@@ -1,12 +1,22 @@
 "use client";
 
-export function ThemeToggle() {
+export function ThemeToggle({
+  light = "Night",
+  dark = "Day",
+  suffix = " edition",
+  className = "whitespace-nowrap font-mono text-[0.68rem] uppercase tracking-[0.18em] hover:text-accent",
+}: {
+  light?: string;
+  dark?: string;
+  suffix?: string;
+  className?: string;
+}) {
   function toggle() {
     const root = document.documentElement;
-    const dark =
+    const isDark =
       root.dataset.theme === "dark" ||
       (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
-    root.dataset.theme = dark ? "light" : "dark";
+    root.dataset.theme = isDark ? "light" : "dark";
     try {
       localStorage.setItem("theme", root.dataset.theme);
     } catch {}
@@ -16,10 +26,16 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="whitespace-nowrap font-mono text-[0.68rem] uppercase tracking-[0.18em] hover:text-accent"
+      className={className}
     >
-      <span className="theme-label-light">Night<span className="hidden sm:inline"> edition</span></span>
-      <span className="theme-label-dark">Day<span className="hidden sm:inline"> edition</span></span>
+      <span className="theme-label-light">
+        {light}
+        {suffix && <span className="hidden sm:inline">{suffix}</span>}
+      </span>
+      <span className="theme-label-dark">
+        {dark}
+        {suffix && <span className="hidden sm:inline">{suffix}</span>}
+      </span>
     </button>
   );
 }

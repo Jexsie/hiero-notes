@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { reposIn, type Briefing, type Section } from "@/lib/briefings";
+import { newsTone, reposIn, type Briefing, type Section } from "@/lib/briefings";
 import { colorForTitle } from "@/lib/repos";
 import { Masthead } from "./Masthead";
 import { Md } from "./Md";
@@ -26,20 +26,6 @@ function topLevelItems(md: string): number {
 
 function sectionItems(s: Section): number {
   return topLevelItems(s.intro) + s.subsections.reduce((n, sub) => n + topLevelItems(sub.body), 0);
-}
-
-const NEWS_TONES: [RegExp, string, string][] = [
-  [/discussion|idea/i, "ideas", "Ideas"],
-  [/\bhips?\b/i, "hips", "Proposals"],
-  [/being built/i, "building", "In progress"],
-  [/shipped/i, "shipped", "Shipped"],
-  [/deprecat|breaking|removed/i, "breaking", "Breaking"],
-  [/changed/i, "changed", "Changed"],
-];
-
-function newsTone(title: string): [string, string] {
-  const hit = NEWS_TONES.find(([re]) => re.test(title));
-  return hit ? [hit[1], hit[2]] : ["other", "Elsewhere"];
 }
 
 function SectionHeader({ letter, section }: { letter: string; section: Section }) {

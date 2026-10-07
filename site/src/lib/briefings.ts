@@ -213,3 +213,74 @@ export function reposIn(md: string): string | undefined {
   );
   return repos.size ? [...repos].join(" ") : undefined;
 }
+
+export type Ticket = {
+  /** Markdown of the first line (the suggestion itself). */
+  title: string;
+  /** Labelled sub-bullets such as "Why you", "Status", "First step", "Size". */
+  fields: { key: string; value: string }[];
+  /** Unlabelled sub-bullets. */
+  notes: string[];
+  repos?: string;
+};
+
+/**
+ * Splits a "Where you can contribute" subsection into numbered suggestions with their
+ * labelled fields (`- *Why you:* ...`). Bullets that aren't numbered come back as `loose`.
+ */
+export function parseTickets(body: string): { tickets: Ticket[]; loose: string[] } {
+  const tickets: Ticket[] = [];
+  const loose: string[] = [];
+  let current: Ticket | null = null;
+  for (const line of body.split("\n")) {
+    const numbered = line.match(/^\d+\.\s+(.*)$/);
+    const sub = line.match(/^\s+[-*]\s+(.*)$/);
+    if (numbered) {
+      current = { title: numbered[1], fields: [], notes: [] };
+      tickets.push(current);
+    } else if (sub && current) {
+      const field = sub[1].match(/^\*([^*]+?):\*\s*(.*)$/);
+      if (field) current.fields.push({ key: field[1].trim(), value: field[2] });
+      else current.notes.push(sub[1]);
+    } else if (/^[-*]\s+/.test(line)) {
+      current = null;
+      loose.push(line.replace(/^[-*]\s+/, ""));
+    } else if (line.trim() && current) {
+      current.title += " " + line.trim();
+    }
+  }
+  for (const t of tickets) t.repos = reposIn(t.title);
+  return { tickets, loose };
+}
+
+/** Splits a leading **bold** phrase from the rest of a markdown snippet. */
+export function headline(md: string): { head: string | null; rest: string } {
+  const m = md.match(/^\*\*(.+?)\*\*[:.]?\s*/);
+  return m ? { head: m[1].replace(/[:.]$/, ""), rest: md.slice(m[0].length) } : { head: null, rest: md };
+}
+
+/** Rough size from a "Size:" field, on a 1–5 scale (S, S–M, M, M–L, L). */
+export function sizeLevel(value: string): { level: number; label: string } | null {
+  const v = value.toLowerCase();
+  const s = v.includes("small"), m = v.includes("medium"), l = v.includes("large");
+  if (s && m) return { level: 2, label: "S–M" };
+  if (m && l) return { level: 4, label: "M–L" };
+  if (s) return { level: 1, label: "S" };
+  if (m) return { level: 3, label: "M" };
+  if (l) return { level: 5, label: "L" };
+  return null;
+}
+
+export const NEWS_TONES: [RegExp, string, string][] = [
+  [/discussion|idea/i, "ideas", "Ideas"],
+  [/\bhips?\b/i, "hips", "Proposals"],
+  [/being built/i, "building", "In progress"],
+  [/shipped/i, "shipped", "Shipped"],
+  [/deprecat|breaking|removed/i, "breaking", "Breaking"],
+  [/changed/i, "changed", "Changed"],
+];
+
+export function newsTone(title: string): [string, string] {
+  const hit = NEWS_TONES.find(([re]) => re.test(title));
+  return hit ? [hit[1], hit[2]] : ["other", "Elsewhere"];
+}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { RepoCount } from "@/lib/briefings";
+import { applyLens } from "@/lib/lens";
 
 /**
  * Bar chart of repo mentions that doubles as a filter: picking a repo dims every
@@ -14,16 +15,7 @@ export function RepoLens({ counts, target }: { counts: RepoCount[]; target: stri
 
   function select(repo: string | null) {
     setActive(repo);
-    const root = document.getElementById(target);
-    if (!root) return;
-    root.toggleAttribute("data-lens", repo !== null);
-    let n = 0;
-    for (const el of root.querySelectorAll<HTMLElement>("[data-repos]")) {
-      const match = repo !== null && el.dataset.repos!.split(" ").includes(repo);
-      el.toggleAttribute("data-hit", match);
-      if (match && !el.parentElement?.closest("[data-hit]")) n++;
-    }
-    setHits(n);
+    setHits(applyLens(target, repo));
   }
 
   return (

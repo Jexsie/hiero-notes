@@ -1,0 +1,267 @@
+/* "Signal" design: an operations console. Scoped to .sig so it can sit beside the Ledger design. */
+
+.sig {
+  --bg: light-dark(#eef0ea, #0a0d0b);
+  --panel: light-dark(#f8f9f5, #0f1411);
+  --panel-2: light-dark(#e4e8df, #141b17);
+  --line: light-dark(#cdd3c7, #1f2924);
+  --line-2: light-dark(#b2baab, #2c3a33);
+  --fg: light-dark(#0f1410, #d9e4d6);
+  --dim: light-dark(#5e6b61, #71847a);
+  --sig: light-dark(#b25f00, #ffb000);
+  --sig-soft: light-dark(#b25f0018, #ffb00014);
+
+  --t-ideas: light-dark(#8a6d00, #f4d35e);
+  --t-hips: light-dark(#3d4a42, #b9c7bd);
+  --t-building: light-dark(#0b6f99, #4cc9f0);
+  --t-shipped: light-dark(#1d7a45, #3ddc84);
+  --t-breaking: light-dark(#c2261b, #ff4d3d);
+  --t-changed: light-dark(#6b5aa6, #b8a6ff);
+  --t-other: light-dark(#6f7a72, #7d8b82);
+
+  /* Override the Ledger repo colours for this palette */
+  --r-js: light-dark(#a86a00, #f7b733);
+  --r-java: light-dark(#b8321f, #ff6b57);
+  --r-tck: light-dark(#0b6f99, #4cc9f0);
+  --r-solo: light-dark(#1d7a45, #3ddc84);
+  --r-action: light-dark(#0e7f78, #2ee6d6);
+  --r-relay: light-dark(#6b5aa6, #b8a6ff);
+  --r-other: light-dark(#a3ab9f, #3a4741);
+
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+  /* faint scanlines */
+  background-image: repeating-linear-gradient(0deg, transparent 0 3px, light-dark(#00000008, #ffffff04) 3px 4px);
+}
+
+/* The Ledger's paper grain and background don't belong here */
+html:has(.sig),
+body:has(.sig) { background: light-dark(#eef0ea, #0a0d0b); }
+body:has(.sig)::before { display: none; }
+
+.sig ::selection { background: var(--sig); color: var(--bg); }
+
+.sig .mono { font-family: var(--font-martian), ui-monospace, monospace; font-stretch: 87.5%; }
+.sig .cond { font-stretch: 62.5%; }
+.sig .label {
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── Panels ──────────────────────────────────────────────────────────── */
+
+.sig .panel {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+.sig .panel::before,
+.sig .panel::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: var(--sig);
+  border-style: solid;
+  pointer-events: none;
+}
+.sig .panel::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.sig .panel::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.sig .panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-2);
+}
+.sig .panel-head h2 {
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.sig .panel-head h2 b { color: var(--sig); font-weight: 500; }
+
+.sig .led {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c, var(--sig));
+  box-shadow: 0 0 8px var(--c, var(--sig));
+  flex: none;
+}
+.sig .led.pulse { animation: sig-pulse 2.2s ease-in-out infinite; }
+@keyframes sig-pulse { 50% { opacity: 0.35; box-shadow: none; } }
+
+.sig .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-stretch: 87.5%;
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 10%, transparent);
+  white-space: nowrap;
+}
+
+/* ── Load-in ─────────────────────────────────────────────────────────── */
+
+@keyframes sig-flip {
+  from { transform: perspective(600px) rotateX(-80deg); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes sig-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes sig-fill { from { transform: scaleX(0); } }
+.sig .flip { transform-origin: top; animation: sig-flip 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+.sig .fade { animation: sig-in 0.6s ease both; animation-delay: var(--d, 0ms); }
+.sig .fill { transform-origin: left; animation: sig-fill 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both; }
+@media (prefers-reduced-motion: reduce) {
+  .sig .flip, .sig .fade, .sig .fill, .sig .led.pulse { animation: none; }
+}
+
+/* ── Markdown inside the console ─────────────────────────────────────── */
+
+.sig .md { line-height: 1.5; }
+.sig .md > * + * { margin-top: 0.55em; }
+.sig .md strong { font-weight: 650; }
+.sig .md em { font-style: italic; }
+.sig .md code {
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-stretch: 87.5%;
+  font-size: 0.8em;
+  color: var(--sig);
+  overflow-wrap: anywhere;
+}
+.sig .md a { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-color: var(--line-2); }
+.sig .md a:hover { color: var(--sig); }
+.sig .md a.ref {
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--ref) 70%, transparent);
+  background: color-mix(in srgb, var(--ref) 9%, transparent);
+  padding: 0 0.15em;
+}
+.sig .md a.ref:hover { color: var(--ref); background: color-mix(in srgb, var(--ref) 18%, transparent); }
+.sig .md ul, .sig .md ol { padding-left: 1.1em; }
+.sig .md ul { list-style: none; }
+.sig .md ul > li { position: relative; }
+.sig .md ul > li::before {
+  content: "›";
+  position: absolute;
+  left: -1em;
+  color: var(--tone, var(--sig));
+  font-weight: 700;
+}
+.sig .md li + li { margin-top: 0.45em; }
+.sig .md li > ul { margin-top: 0.35em; }
+.sig .md ol { list-style: decimal; }
+
+.sig .table-wrap { overflow-x: auto; }
+.sig .md table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.sig .md th {
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: left;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+.sig .md td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.sig .md tr:last-child td { border-bottom: 0; }
+.sig .md td:first-child { font-family: var(--font-martian), ui-monospace, monospace; font-size: 0.78rem; white-space: nowrap; }
+
+/* Focus module labels: "**In progress:**" becomes a tag */
+.sig .md-mod > ul > li { padding: 0.55rem 0; border-top: 1px dashed var(--line); }
+.sig .md-mod > ul > li:first-child { border-top: 0; }
+.sig .md-mod > ul > li + li { margin-top: 0; }
+.sig .md-mod > ul > li::before { content: none; }
+.sig .md-mod > ul { padding-left: 0; }
+.sig .md-mod > ul > li > strong:first-child,
+.sig .md-mod > ul > li > p:first-child > strong:first-child {
+  display: block;
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-stretch: 87.5%;
+  font-weight: 400;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tone);
+  margin-bottom: 0.2rem;
+}
+
+/* ── Repo filter: dim what doesn't match ─────────────────────────────── */
+
+#board [data-repos], #board .md li, #board .md tr, #board .ticket, #board .row {
+  transition: opacity 0.2s ease;
+}
+#board[data-lens] .md li:not([data-hit]),
+#board[data-lens] .md tr:not([data-hit]),
+#board[data-lens] .ticket:not([data-hit]),
+#board[data-lens] .row:not([data-hit]) {
+  opacity: 0.18;
+}
+#board[data-lens] .md li[data-hit] li:not([data-hit]) { opacity: 1; }
+#board[data-lens] .ticket[data-hit] .md li { opacity: 1; }
+
+/* ── Tabs ────────────────────────────────────────────────────────────── */
+
+.sig .tab {
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-stretch: 87.5%;
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.7rem;
+  color: var(--dim);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+.sig .tab[aria-selected="true"] { color: var(--c, var(--sig)); border-bottom-color: var(--c, var(--sig)); }
+.sig .tab:hover { color: var(--fg); }
+
+.sig [data-tone="ideas"] { --tone: var(--t-ideas); }
+.sig [data-tone="hips"] { --tone: var(--t-hips); }
+.sig [data-tone="building"] { --tone: var(--t-building); }
+.sig [data-tone="shipped"] { --tone: var(--t-shipped); }
+.sig [data-tone="breaking"] { --tone: var(--t-breaking); }
+.sig [data-tone="changed"] { --tone: var(--t-changed); }
+.sig [data-tone="other"] { --tone: var(--t-other); }
+
+/* ── Undo Ledger markdown styles that would leak in ──────────────────── */
+
+.sig .md ul > li::before {
+  width: auto;
+  height: auto;
+  top: 0;
+  background: none;
+  border: 0;
+  transform: none;
+}
+.sig .md ul ul > li::before { content: "·"; color: var(--dim); }
+.sig .md code { background: var(--panel-2); padding: 0.05em 0.3em; border-radius: 0; }
+.sig .md ol > li::marker { font-family: var(--font-martian), ui-monospace, monospace; color: var(--sig); }
+.sig .table-wrap { border: 0; }
+.sig .md td:first-child { font-size: 0.78rem; }
+
+/* Your queue: each item is a row with a status bar */
+.sig .md-queue > ul { padding-left: 0; }
+.sig .md-queue > ul > li { padding: 0.6rem 0 0.6rem 0.9rem; border-left: 2px solid var(--sig); background: linear-gradient(90deg, var(--sig-soft), transparent 40%); }
+.sig .md-queue > ul > li + li { margin-top: 0.5rem; }
+.sig .md-queue > ul > li::before { content: none; }
