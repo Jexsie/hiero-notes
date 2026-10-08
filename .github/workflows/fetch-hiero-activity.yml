@@ -1,6 +1,7 @@
 name: Fetch Hiero activity
 
 # Collects hiero-ledger issues, PRs and releases and commits them to data/YYYY-MM-DD.txt.
+# If today's file is already in the repo (e.g. pushed from a local run), it skips the fetch.
 # The Claude routine reads that file at 06:00 and writes the digest.
 # Runs here (not in the routine) because cloud routines can't reach repos outside the session.
 
@@ -10,6 +11,11 @@ on:
     # 72h on Mondays to cover the weekend. GitHub may start scheduled jobs a few minutes late.
     - cron: "0 2 * * 1-5"
   workflow_dispatch: # lets you run it by hand from the Actions tab
+    inputs:
+      force:
+        description: "Fetch even if today's data file already exists"
+        type: boolean
+        default: false
 
 permissions:
   contents: write # needed to commit the data file
@@ -21,14 +27,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check for today's data file
+        id: check
+        # Same name fetch_activity.py --save uses: today's date in Kampala time.
+        run: |
+          file="data/$(TZ=Africa/Kampala date +%F).txt"
+          if [ -f "$file" ] && [ "${{ inputs.force }}" != "true" ]; then
+            echo "$file already exists; skipping the fetch."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Fetch activity
+        id: fetch
+        if: steps.check.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          mkdir -p data
-          python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --user jexsie > "data/$(date -u +%F).txt"
+        # --save writes data/YYYY-MM-DD.txt (Kampala date) and prints the path; the same
+        # command works locally, so local runs and this job produce the same file.
+        run: echo "file=$(python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --save --user jexsie)" >> "$GITHUB_OUTPUT"
 
       - name: Commit data file
+        if: steps.check.outputs.exists == 'false'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -39,8 +60,11 @@ jobs:
       - name: Fail the job if every GitHub request failed
         # Runs after the commit, so the routine still sees the error in the file,
         # and GitHub emails you about the failed job.
+        if: steps.check.outputs.exists == 'false'
+        env:
+          FILE: ${{ steps.fetch.outputs.file }}
         run: |
-          if grep -q '^ERROR' "data/$(date -u +%F).txt"; then
-            cat "data/$(date -u +%F).txt"
+          if grep -q '^ERROR' "$FILE"; then
+            cat "$FILE"
             exit 1
           fi

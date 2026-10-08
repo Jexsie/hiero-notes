@@ -2,21 +2,30 @@
 """Collect hiero-ledger GitHub activity, discussions, focus-repo status and contribution candidates.
 
 Usage (from the repo root):
-    python3 .claude/scripts/fetch_activity.py               # last 24h (72h on Mondays)
-    python3 .claude/scripts/fetch_activity.py --hours 168   # last week
-    python3 .claude/scripts/fetch_activity.py --user jexsie # personal sections for a named user
+    python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --save              # write data/YYYY-MM-DD.txt
+    python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --save --hours 168  # write data/YYYY-MM-DD-168h.txt
+    python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py                     # print to stdout instead
+    python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --out some/file.txt # write to a chosen path
+
+--save names the file after today's date in Kampala time (the same file the daily GitHub
+Action commits), prints the path it wrote, and overwrites an existing file for that day.
 
 In GitHub Actions, pass --user: there `@me` would mean the Actions bot, not you.
 Requires the GitHub CLI (gh), authenticated via `gh auth login` or a GH_TOKEN env var.
 The lists below control which repos get detail; edit them rather than the code.
 """
 import argparse
+import contextlib
 import json
 import re
 import subprocess
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+KAMPALA = timezone(timedelta(hours=3), "EAT")  # no daylight saving, so a fixed offset is exact
+REPO_ROOT = Path(__file__).resolve().parents[4]  # .claude/skills/<skill>/scripts/ -> repo root
 
 ORG = "hiero-ledger"
 
@@ -427,7 +436,32 @@ def main():
     parser.add_argument("--hours", type=int, default=None)
     parser.add_argument("--user", default="@me", help="GitHub login for the personal sections")
     parser.add_argument("--no-me", action="store_true", help="skip the personal sections")
+    out = parser.add_mutually_exclusive_group()
+    out.add_argument("--save", action="store_true",
+                     help="write to data/YYYY-MM-DD.txt (Kampala date; -<hours>h suffix with --hours) and print the path")
+    out.add_argument("--out", help="write to this file instead of stdout")
     args = parser.parse_args()
+
+    path = None
+    if args.save:
+        suffix = f"-{args.hours}h" if args.hours else ""
+        path = REPO_ROOT / "data" / f"{datetime.now(KAMPALA):%Y-%m-%d}{suffix}.txt"
+    elif args.out:
+        path = Path(args.out)
+    if path is None:
+        collect(args)
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f, contextlib.redirect_stdout(f):
+        collect(args)
+    lines = sum(1 for _ in open(path, encoding="utf-8"))
+    status = "ERROR in output, see file" if calls["ok"] == 0 else f"{len(warnings)} warnings" if warnings else "ok"
+    print(f"wrote {path.relative_to(REPO_ROOT) if path.is_relative_to(REPO_ROOT) else path} ({lines} lines, {status})",
+          file=sys.stderr)
+    print(path)
+
+
+def collect(args):
 
     try:
         subprocess.run(["gh", "--version"], capture_output=True, check=True)

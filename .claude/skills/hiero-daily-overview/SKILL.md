@@ -30,12 +30,14 @@ All paths are relative to the repo root.
 - If today's file is missing, use the newest file in `data/` and say at the top which date the data is from.
 - If `data/` has no files at all, send a short message saying the GitHub Action hasn't produced data yet, with a link to the repo's Actions tab, and stop.
 
-**Locally, run the script yourself:**
+**Locally, run the script yourself with `--save`**, so the data lands in `data/` exactly as the GitHub Action would write it:
 
 ```bash
-python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py              # last 24h (72h on Mondays)
-python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --hours 168  # "this week"
+python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --save              # data/YYYY-MM-DD.txt, last 24h (72h on Mondays)
+python3 .claude/skills/hiero-daily-overview/scripts/fetch_activity.py --save --hours 168  # data/YYYY-MM-DD-168h.txt, "this week"
 ```
+
+The script prints the path it wrote (today's date in Kampala time) and a one-line summary. Then read that file. Don't redirect stdout or save the data anywhere else. A local run overwrites the file for that day, including one the Action already committed, so the briefing and its data always match. Don't commit the data file; leave that to the user, like the briefing.
 
 Pick `--hours` from the request ("this week" → 168). If `gh` is missing or every request fails, tell the user how to fix it (`gh auth login`) and stop. Locally you can also read more about a promising item with `gh issue view <n> --repo hiero-ledger/<repo> --comments`.
 
