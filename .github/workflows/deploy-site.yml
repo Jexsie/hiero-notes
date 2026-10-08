@@ -1,7 +1,9 @@
 name: Deploy briefings site
 
-# Builds the Next.js site in site/ from briefings/*.md and publishes it to GitHub Pages.
-# Runs whenever a briefing or the site changes on main.
+# Builds the Next.js site in site/ and publishes it to GitHub Pages:
+#   - the briefing pages, from briefings/*.md
+#   - the Pulse dashboard, from data fetched here by scripts/fetch_pulse.py (not committed)
+# Runs whenever a briefing, the site or the fetch script changes on main, and daily so Pulse stays fresh.
 
 on:
   push:
@@ -9,7 +11,11 @@ on:
     paths:
       - "briefings/**"
       - "site/**"
+      - "scripts/fetch_pulse.py"
       - ".github/workflows/deploy-site.yml"
+  schedule:
+    # 03:00 UTC = 06:00 in Kampala, after the 05:00 activity fetch.
+    - cron: "0 3 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,7 +30,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 40
     defaults:
       run:
         working-directory: site
@@ -41,6 +47,12 @@ jobs:
         uses: actions/configure-pages@v6
 
       - run: npm ci
+
+      - name: Fetch Pulse data
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/fetch_pulse.py --user jexsie
 
       - name: Build static site
         env:

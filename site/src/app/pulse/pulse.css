@@ -1,0 +1,156 @@
+/* Pulse: a data dashboard. Colours are the dataviz reference palette (validated with
+   validate_palette.js: 6 categorical slots adjacent-pairs in both modes, first 3 all-pairs). */
+
+.pulse {
+  --plane: light-dark(#f9f9f7, #0d0d0d);
+  --surface: light-dark(#fcfcfb, #1a1a19);
+  --surface-2: light-dark(#f0efec, #232321);
+  --ink: light-dark(#0b0b0b, #ffffff);
+  --ink-2: light-dark(#52514e, #c3c2b7);
+  --muted: #898781;
+  --grid: light-dark(#e1e0d9, #2c2c2a);
+  --axis: light-dark(#c3c2b7, #383835);
+  --ring: light-dark(rgba(11, 11, 11, 0.1), rgba(255, 255, 255, 0.1));
+  --wash: light-dark(rgba(42, 120, 214, 0.08), rgba(57, 135, 229, 0.12));
+
+  /* categorical slots, fixed order */
+  --s1: light-dark(#2a78d6, #3987e5);
+  --s2: light-dark(#eb6834, #d95926);
+  --s3: light-dark(#1baf7a, #199e70);
+  --s4: light-dark(#eda100, #c98500);
+  --s5: light-dark(#e87ba4, #d55181);
+  --s6: #008300;
+
+  /* sequential blue ramp */
+  --q100: #cde2fb;
+  --q200: #9ec5f4;
+  --q300: #6da7ec;
+  --q400: #3987e5;
+  --q500: #256abf;
+  --q600: #184f95;
+  --q700: #0d366b;
+
+  /* status (never reused as a series colour) */
+  --good: #0ca30c;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+
+  background: var(--plane);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+html:has(.pulse),
+body:has(.pulse) { background: light-dark(#f9f9f7, #0d0d0d); }
+body:has(.pulse)::before { display: none; }
+
+.pulse .card {
+  background: var(--surface);
+  border: 1px solid var(--ring);
+  border-radius: 12px;
+}
+.pulse .card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  padding: 0.9rem 1rem 0.25rem;
+}
+.pulse .card-head > :first-child { flex: 1 1 16rem; }
+.pulse .card-title { font-size: 0.95rem; font-weight: 600; }
+.pulse .card-sub { font-size: 0.78rem; color: var(--ink-2); }
+
+.pulse .seg {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+.pulse .seg button {
+  font-size: 0.78rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.pulse .seg button:hover { color: var(--ink); }
+.pulse .seg button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--ring);
+}
+
+.pulse .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--ring);
+  background: var(--surface);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.pulse .pill:hover { color: var(--ink); }
+.pulse .pill[aria-pressed="true"] { color: var(--ink); font-weight: 600; border-color: var(--ink); }
+
+.pulse .swatch { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.pulse .linekey { width: 14px; height: 2px; border-radius: 1px; flex: none; }
+
+.pulse .tooltip {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  min-width: 140px;
+  max-width: 320px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--ring);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.pulse .tooltip .v { font-size: 1rem; font-weight: 650; }
+.pulse .tooltip .k { color: var(--ink-2); }
+
+.pulse .hit { cursor: pointer; }
+.pulse .hit:hover,
+.pulse .hit:focus-visible { filter: brightness(1.12); outline: none; }
+
+.pulse .tick { font-size: 10.5px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.pulse .gridline { stroke: var(--grid); stroke-width: 1; }
+.pulse .axisline { stroke: var(--axis); stroke-width: 1; }
+
+.pulse .row-link:hover { background: var(--surface-2); }
+
+@keyframes pulse-in { from { opacity: 0; transform: translateY(6px); } }
+.pulse .rise { animation: pulse-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+.pulse .stale { opacity: 0.5; transition: opacity 0.2s; }
+@media (prefers-reduced-motion: reduce) { .pulse .rise { animation: none; } }
+
+/* Ordinal age ramp: older = more intense. Light runs 250→650; dark runs the other way
+   (600→150) so the oldest step stays the loudest against the dark surface. */
+.pulse {
+  --a1: light-dark(#86b6ef, #184f95);
+  --a2: light-dark(#5598e7, #256abf);
+  --a3: light-dark(#2a78d6, #3987e5);
+  --a4: light-dark(#1c5cab, #6da7ec);
+  --a5: light-dark(#104281, #b7d3f6);
+}
+
+/* Heat ramp: few → many. In dark mode "few" sits near the surface and "many" is brightest. */
+.pulse {
+  --h1: light-dark(#9ec5f4, #184f95);
+  --h2: light-dark(#6da7ec, #256abf);
+  --h3: light-dark(#3987e5, #3987e5);
+  --h4: light-dark(#256abf, #6da7ec);
+  --h5: light-dark(#0d366b, #b7d3f6);
+}
+.pulse .pill.wrap { white-space: normal; }
