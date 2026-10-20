@@ -1,0 +1,1169 @@
+WINDOW: last 24h, since 2026-10-19T07:24:16Z (generated 2026-10-20 07:24 UTC)
+FOCUS REPOS (deep dive + contribution suggestions): hiero-sdk-js, hiero-sdk-tck, hiero-sdk-java, solo, hiero-solo-action, hiero-json-rpc-relay
+
+== RELEASES ==
+  none
+
+== NEW ISSUES (34 human, 0 bot) ==
+[hiero-sdk-tck] (watchlist)
+  #771 Proposal: Design of the Hiero TCK GitHub Action  [by manishdait]
+    https://github.com/hiero-ledger/hiero-sdk-tck/issues/771
+    > ### Description This issue proposes a discussion of the architecture and design of the **Hiero TCK GitHub Action**, a GitHub Action that enables SDK's to run the Hiero SDK Technology Compatibility Kit (TCK) against their SDK's JSON-RPC server in GitHub Actions. The goal is to establish a approach to…
+[hiero-sdk-java] (watchlist)
+  #3009 Overloads method to pass timeout to MirrorNodeContractCallQuery and MirrorContractEstimateGasQuery  [by manishdait; 2 comments]
+    https://github.com/hiero-ledger/hiero-sdk-java/issues/3009
+    > **Description** The `MirrorNodeContractCallQuery` and `MirrorNodeContractEstimateGasQuery` classes only provides `execute(Client client)` method. Users cannot specify a custom timeout when executing these queries. **Proposed Changes** Add overloaded `execute()` methods to both classes to pass `timeo…
+[hiero-sdk-js] (watchlist)
+  #4560 Make SDK class registration explicit so the SDK can be tree-shaken without breaking Transaction.fromBytes()  [by Jexsie; 1 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4560
+    > ### Problem About 75 SDK files register themselves in a lookup table when they load, and `Transaction.fromBytes()`, `Query.fromBytes()`, `Transaction.schedule()` and service endpoint parsing depend on that. This hidden dependency is why the SDK has to declare `"sideEffects": true`. Bundlers therefor…
+  #4557 [Intermediate]: Fix flaky unit test: ClientMirrorNodeHttp deadline test fails when the runner stalls before the first request  [by Fantomasa; labels: bug, hacktoberfest, intermediate]
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4557
+    > ## 🧩 Intermediate Friendly This issue is a good fit for contributors who are already familiar with the Hiero JS SDK and feel comfortable navigating the codebase. We strongly recommend completing two Beginner Issues before tackling an Intermediate Issue. Intermediate Issues often involve: - Exploring…
+  #4556 [Intermediate]: clearAccountMemo, clearFileMemo, clearContractMemo and clearTokenMemo do not clear the memo  [by Fantomasa; labels: bug, hacktoberfest, intermediate; 1 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4556
+    > ## 🧩 Intermediate Friendly This issue is a good fit for contributors who are already familiar with the Hiero JS SDK and feel comfortable navigating the codebase. We strongly recommend completing two Beginner Issues before tackling an Intermediate Issue. Intermediate Issues often involve: - Exploring…
+  #4555 [Intermediate]: Entity ID fromString silently truncates IDs with letters (0.0.12ab34 becomes 0.0.12)  [by Fantomasa; labels: bug, hacktoberfest, intermediate]
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4555
+    > ## 🧩 Intermediate Friendly This issue is a good fit for contributors who are already familiar with the Hiero JS SDK and feel comfortable navigating the codebase. We strongly recommend completing two Beginner Issues before tackling an Intermediate Issue. Intermediate Issues often involve: - Exploring…
+  + 6 good-first-issue/beginner items: #4554 [Beginner]: Add unit tests for ContractInfo and fix its JSDoc; #4553 [Beginner]: Replace wildcard Client<*, *> JSDoc types with Client<Channel, MirrorChannel>; #4552 [Beginner]: Reject malformed strings in TransactionId.fromString and add tests; #4551 [Good First Issue]: Fix 7 JSDoc lint warnings in the providers, ObjectMap and PrivateKey; #4550 [Good First Issue]: Fix spelling mistakes in two error messages and the change-keys example; #4549 [Good First Issue]: Fix copy-pasted JSDoc descriptions in NetworkVersionInfo, TransactionRecord, TokenNftTransfer and ManagedNetwork
+[solo] (watchlist)
+  #6246 Migration test: smart contract test hangs 6 min with no relay traffic; add ss -tn diagnostics on timeout
+  [by JeffreyDallas; labels: Bug, P1-💎, Testing Improvements]
+    https://github.com/hiero-ledger/solo/issues/6246
+    > ## Overview The `Test Migration Process` job intermittently fails in the smart contract step (`@OZERC20 Test Suite`) with mocha `Timeout of 360000ms exceeded` on `transfer(address,uint256)` and `transferFrom(address,address,uint256)`. The relay, consensus node and mirror node are healthy; the stall …
+  #6243 Support multiple mirror nodes in the same namespace  [by ValentinVPK; labels: P2-⏭️💎; 1 comments]
+    https://github.com/hiero-ledger/solo/issues/6243
+    > ### Requested Feature Allow `solo mirror node add` to deploy a second mirror node in a namespace that already has one, with its own database, so each mirror node can import from a different source (e.g. one from the bucket, one from a Block Node). ### Business Need Tests that compare mirror nodes wi…
+[hiero-block-node] (watchlist)
+  #3882 A throwing gating message handler kills its processor thread and stalls the ring (no exception handler on processors)  [by AlfredoG87; labels: Bug, Messaging Facility]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3882
+    > ### Description `BlockMessagingFacilityImpl.registerHandler` builds every handler's processor with `new BatchEventProcessorBuilder().build(...)` and never calls `setExceptionHandler(...)`. `setDefaultExceptionHandler(...)` on both disruptors (L281–282) only applies to handlers added through the Disr…
+  #3879 Nano profile is OOM-killed verifying TSS blocks since the TSS library update; memory test depends on runner size  [by AlfredoG87; labels: Bug, Helm - Deploy]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3879
+    > ## Summary Since the TSS library update (#3853, hedera-cryptography 3.13.0 -> 3.22.0), a block node deployed with the nano profile (`charts/block-node-server/values-overrides/nano.yaml`, limits 1 CPU / 128M) is OOM-killed when it verifies TSS block proofs. `MemoryRegressionTests` doesn't catch this …
+  #3878 refactor(backfill): collapse status, pending and in-flight gauges into one  [by AlfredoG87; labels: Improvement, Block Node]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3878
+    > `backfill_pending_blocks` and `backfill_inflight_blocks` report the same value, and `backfill_status` is derived from it (`pending > 0` means running). Three observable gauges for one number. ## Proposal Keep one gauge for pending blocks (plain `LongGauge`, not observable), derive status in Grafana.…
+  #3877 test: verify observable gauge wiring through a registry snapshot  [by AlfredoG87; labels: Tests, Block Node; 1 comments]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3877
+    > After #3838 removed `TestMetricsExporter`, observable gauges are only checked through their source (a field or `determineStatus()`), never through the metric. A wrong lambda in `observe(...)` or a gauge that is never registered would pass every test. Affected: `backfill_status`, `backfill_pending_bl…
+  #3873 Historic zip accessor creates its hard links next to the archives (race, O(N) scan, never cleaned)  [by AlfredoG87; labels: Bug, BlocksFilesHistoric Plugin]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3873
+    > ## Summary `ZipBlockAccessor` builds its temporary hard-link path as `linksRootPath.resolve(blockPath.zipFilePath())`. The zip path is absolute, so `Path.resolve` returns it unchanged, and the links never go under `<root>/links`. Each accessor instead probes `80000.zip.0`, `80000.zip.1`, ... **besid…
+  #3871 Subscriber sessions parked waiting for blocks are never released after the client disconnects  [by AlfredoG87; labels: Bug, Subscriber Plugin]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3871
+    > ## Summary PBJ/Helidon don't tell a server-streaming pipeline when the client cancels or disconnects after its half-close (#3825). A `BlockStreamSubscriberSession` only learns its client is gone when a send throws. A session that is waiting for blocks never sends, so it lives forever: - a live-tip (…
+  #3868 ci(solo-e2e): restrict consensus-node-ref or isolate caches to clear CodeQL cache-poisoning alerts  [by AlfredoG87; labels: Improvement, Security, CI/CD]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3868
+    > #3853 added a `consensus-node-ref` input to `.github/workflows/solo-e2e-test.yml`. The "Checkout Consensus Node source" step now checks out `hiero-ledger/hiero-consensus-node` at `${{ inputs.consensus-node-ref || 'main' }}` instead of a hard-coded `main`, then runs `./gradlew assemble` on that sourc…
+  #3867 perf(base): make CombinedBlockRangeSet.streamRanges linear and snapshot once per refreshBlockRanges  [by AlfredoG87; labels: Improvement, Block Node]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3867
+    > `HistoricalBlockFacilityImpl.availableBlocks()` is a `CombinedBlockRangeSet`. Its `streamRanges()` (and `stream()`, `contains(start, end)`) calls `reduceRanges()`, which builds a `ConcurrentLongRangeSet(LongRange...)`; that constructor calls `mergeRange` per range and copies the list each time, so e…
+  #3866 docs: facility-app-state upgrade notes say 0.46.0, but #3804 shipped in 0.45.0  [by AlfredoG87; labels: Block Node, Documentation]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3866
+    > `docs/block-node/configuration.md:127` and `docs/block-node/operations/resetting-and-upgrading-the-block-node.md:75` say "Upgrading to 0.46.0: `facility-app-state` is now required", and line 157 of the reset doc says "Rolling back from 0.46.0 or later". #3804 is in `v0.45.0-rc2` (its release notes l…
+  #3863 Follow up to PR #3753  [by ivannov; labels: Improvement, Block Node Tools]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3863
+    > ### Story Form As a Block Streams CLI operator, I want a corrupt hasher state, checkpoint or jumpstart.bin file reported as corrupt, and only a real SHA-384 file reported as legacy, So that I get the right next step: fall back to the backup, re-run validation, or re-wrap. ### Technical Notes - Hashe…
+[hiero-json-rpc-relay] (watchlist)
+  #5897 Revisit Codecov setup to improve reporting on PRs  [by tgntr; labels: process, internal]
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/5897
+    > ### Context Codecov runs on every PR. Both unit and acceptance tests report coverage to it, and it posts a coverage report and coverage checks on the PR. ### Problem - The coverage changes it reports aren't always accurate. Some PRs show small drops even though their changes are well tested. - The P…
+[hiero-consensus-node] (other)
+  #27740 Signed state writer reads the state after an async snapshot releases it  [by imalygin; labels: Platform]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27740
+    > When a periodic state is saved with an async snapshot, `SignedStateFileWriter.writeSignedStateFilesToDirectory` releases the state’s reservation early…
+  #27739 Implement PEM reading/writing support  [by anthony-swirldslabs]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27739
+    > To replace a dependency on Bouncy Castle.
+  #27738 Load CLPR ledger configuration from a file on disk, like throttles and fee schedules  [by Neeharika-Sompalli]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27738
+    > ## Summary The initial CLPR ledger configuration throttles are hard-coded in `V0650ClprSchema.initializeSingletons`: `maxSyncBytes` 4 MiB, `maxMessage…
+  #27737 Derive CLPR chain ID from `contracts.chainId` as `eip155:<id>` and remove `clpr.chainId`  [by Neeharika-Sompalli]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27737
+    > ## Summary The CLPR ledger chain ID is set by its own property, `clpr.chainId` (default `hiero:mainnet`). That duplicates `contracts.chainId`, the net…
+  #27735 Make MerkleDB garbage scans stoppable, so disabling compaction doesn’t wait for a full index scan  [by imalygin]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27735
+    > ### Motivation At the start of every reconnect, `VirtualMapLearner` calls `stopAndDisableBackgroundCompaction(true)` on the learner's original data so…
+[hiero-enterprise-java] (other)
+  #396 bump hiero-solo-action to v0.26.0  [by Ndacyayisenga-droid; labels: approved; 2 comments]
+    https://github.com/hiero-ledger/hiero-enterprise-java/issues/396
+[solo-containers] (other)
+  #254 fix(backup-uploader): write current-round marker outside / so the container can run as non-root  [by leninmehedy]
+    https://github.com/hiero-ledger/solo-containers/issues/254
+    > ## Problem `docker/backup-uploader/backup.sh` writes the current-round marker to the root directory: ```bash current_round_number="/$backup_hostname.t…
+[tsc] (other)
+  #303 Project proposal: Make roadmap repository & board public  [by steven-sheehy; labels: enhancement]
+    https://github.com/hiero-ledger/tsc/issues/303
+    > ### Problem ### Problem # Hiero Project Proposal ## Roadmap Repository This document is a proposal to make the [roadmap](https://github.com/hiero-ledg…
+  #302 Project Proposal: hiero-config  [by akugal]
+    https://github.com/hiero-ledger/tsc/issues/302
+    > _This issue is a proposal to add a new project to Hiero, following the [Hiero project proposal template](https://github.com/hiero-ledger/governance/bl…
+
+== NEW PULL REQUESTS (53 human, 14 bot) ==
+[hiero-sdk-java] (watchlist)
+  #3004 chore: Refactor MirrorNode queries to use the MirrorNodeHttpClient  [by manishdait]
+    https://github.com/hiero-ledger/hiero-sdk-java/pull/3004
+    > **Description**: This PR refactors the MirrorNodeQueries to use the MirrorNodeHttpClient, instead of creating new HttpClient every time. **Changes Made:** - Added additional overload method for the `newMirrorNodeHttpClient` to pass the baseUrl with updated port for java rest api for localhost - Refa…
+[hiero-sdk-js] (watchlist)
+  #4559 chore: rename indicies to indices in the cryptography entropy helper  [by achintya2k5; 3 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/pull/4559
+    > **Description**: Fixes a typo error in the cryptography package's entropy helper. - Rename the local variable `indicies` to `indices` in `packages/cryptography/src/util/entropy.js` **Related issue(s)**: Fixes #4508 **Notes for reviewer**: All acceptance criteria checks have run successfully from the…
+  #4558 fix: bind the mock gRPC servers to OS-assigned ports in unit tests  [by Jexsie; labels: ready for review 👀; 3 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/pull/4558
+    > **Description**: Unit tests that use `test/unit/Mocker.js` sometimes fail in CI with `listen EADDRINUSE`, because `Mocker` calculated each mock gRPC server's port as `50213 + VITEST_WORKER_ID * 30 + nodeIndex`. Two mock networks open at the same time in one worker got the same ports. And `VITEST_WOR…
+[hiero-sdk-python] (watchlist)
+  #2739 test: use env fixture in token_create_transaction_e2e_test  [by AhmethanKalenderoglu; labels: queue:junior-committer, open to community review; 1 comments]
+    https://github.com/hiero-ledger/hiero-sdk-python/pull/2739
+    > The tests in `token_create_transaction_e2e_test.py` now take the shared `env` fixture instead of creating `IntegrationTestEnv()` and closing it in `try/finally`. No change to what the tests check. Fixes #2734
+[hiero-sdk-cpp] (watchlist)
+  #1746 Improve comments on Windows-specific include-ordering workarounds  [by Aatish-hari; labels: status: needs review; 2 comments]
+    https://github.com/hiero-ledger/hiero-sdk-cpp/pull/1746
+    > **Description**: **Related issue(s)**: Fixes #1632 **Notes for reviewer**: **Checklist** - [x] Documented (Code comments, README, etc.) - [ ] Tested (unit, integration, etc.) ## Summary by CodeRabbit * **Documentation** * Clarified Windows build guidance for header inclusion order. * Documented that…
+[solo] (watchlist)
+  #6247 fix: dump ss -tn socket state when smart contract test times out  [by JeffreyDallas; labels: P1-💎, PR: Needs Team Approval, In Review 👀; 4 comments]
+    https://github.com/hiero-ledger/solo/pull/6247
+    > ## Description This pull request changes the following: * Adds `dump_socket_state` to `solo_smoke_test.sh`, which prints `ss -tn` (filtered to the relay 37546, mirror REST 38081 and haproxy 35211 port-forward ports) and the `kubectl port-forward` processes. * Adds a background watcher on the mocha o…
+  #6245 ci: add installer E2E workflow with Linux validation  [by Ivo-Yankov; labels: P1-💎; DRAFT; 3 comments]
+    https://github.com/hiero-ledger/solo/pull/6245
+    > ## Description This pull request changes the following: * Adds `flow-installer-e2e.yaml`, an end-to-end test of the OS-specific Solo installers on a fresh runner. For each platform it: * builds the SEA binaries with `flow-build-sea.yaml`, which includes its `--help` / `--version` smoke test, and ser…
+  #6244 fix: isolate TCK changes from Solo release tooling  [by mayanksinha17]
+    https://github.com/hiero-ledger/solo/pull/6244
+    > ## Summary - Prevent TCK-only commits from triggering Solo releases. - Improve Solo release tag selection using semantic version ordering. - Update release preparation tooling to exclude TCK-only changes. - Exclude the TCK directory from npm packaging while retaining CLI sources and resources. - Add…
+[hiero-mirror-node] (watchlist)
+  #14488 Integrate tss wraps library 3.22.0 (0.165)  [by xin-hedera; labels: enhancement, importer; DRAFT; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14488
+    > **Description**: This PR cherry-picks the changes to `release/0.165`: - Bump TSS Wraps library to 3.22.0 - Add migration to drop history_proof_verification_key and add history table - Update tss test artifact with upstream data **Related issue(s)**: Fixes #14326 **Notes for reviewer**: **Checklist**…
+  #14487 Run workflows when relevant files change  [by steven-sheehy; labels: enhancement, github actions, build; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14487
+    > **Description**: * Change acceptance workflow to run whenever a Dockerfile changes * Change native image workflow to run whenever the `spring-conventions.gradle.kts` changes **Related issue(s)**: **Notes for reviewer**: **Checklist** - [ ] Documented (Code comments, README, etc.) - [x] Tested (unit,…
+  #14486 Reject any protobuf field outside the allowlist in `TransferTransaction` in Rosetta  [by bilyana-gospodinova; labels: enhancement, rosetta; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14486
+    > **Description**: parse/combine/submit in Rosetta will now reject `TransferTransaction` transactions with tokenTransfers/nftTransfers that are non-empty. Ref: MN-191
+  #14485 Authenticate consensus node endpoints in the monitor  [by sdimitrov9; labels: bug, monitor; 3 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14485
+    > **Description**: - Add `PREFER_TLS` node TLS mode and make it the default, using a node's TLS endpoint when it publishes one with a certificate hash - Never downgrade to plaintext after a TLS failure; plaintext for TLS-capable nodes now requires an explicit `PLAINTEXT` or `BOTH` mode - Pin nodes on …
+[hiero-block-node] (watchlist)
+  #3883 test(messaging): pace no-backpressure delivery test on handler progress  [by AlfredoG87; labels: Tests; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3883
+    > ## Reviewer Notes `DynamicBlockItemTest.testNoBackpressureHandlerReceivesAllItemsWhenFastEnough` flakes on loaded runners. It last failed the "Quality Checks and UTs" job on #3874, an unrelated PR (`Item count mismatch ==> expected: <2048> but was: <1505>` after `Fast handler should never be evicted…
+  #3881 docs: add block messaging channels design  [by AlfredoG87; labels: Design, Block Node, Documentation; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3881
+    > ## Description Design doc for a generic, typed **channel** API in the Block Messaging Facility, covering the existing block-item and notification rings and the two new rings from epic #3612 (#3613 Block Validations, #3614 Unvalidated Blocks). Doc: `docs/design/architecture/block-messaging-channels.m…
+  #3880 fix(charts): raise the nano profile memory limit to 192M for the TSS library  [by AlfredoG87; labels: Bug, Helm - Deploy; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3880
+    > ## Reviewer Notes Since the TSS library update (#3853), a block node with the nano profile is OOM-killed when it verifies TSS block proofs. It now loads the library's native code and verification key at start and verifies on several native threads, which takes the node to a ~129 MB peak at 1 CPU. `M…
+  #3876 fix: backport bug fixes to 0.45 (#3770, #3824, #3832)  [by AlfredoG87; labels: Bug; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3876
+    > ## Reviewer Notes Backport of 3 bug fixes from `main` to `release/0.45`. They merged after the branch was cut on 2026-10-14, so 0.45.0-rc3 doesn't have them. Each fix is its own commit, cherry-picked with `-x`. All picks were clean. | PR | Fixes | |---|---| | #3770 | Stale resend entries keep the BN…
+  #3875 fix: backport bug fixes to 0.44.3 (#3717, #3793, #3832, #3770, #3824, #3791, #3757)  [by AlfredoG87; labels: Bug; 3 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3875
+    > ## Reviewer Notes Backport of 7 bug fixes from `main` to `release/0.44` for 0.44.3. BN 0.44 stays supported until every consensus node runs CN 0.79 GA or later (the first CN compatible with BN 0.45's TSS changes), so operators on 0.44 need these. Each fix is its own commit, cherry-picked with `-x` i…
+  #3874 fix(blocks-file-historic): create zip accessor links under the links directory  [by AlfredoG87; labels: Bug, BlocksFilesHistoric Plugin; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3874
+    > ## Reviewer Notes `ZipBlockAccessor` built its hard-link path as `linksRootPath.resolve(blockPath.zipFilePath())`. The zip path is absolute, so `Path.resolve` returned the zip path unchanged. Each accessor then scanned `80000.zip.0`, `80000.zip.1`, ... **next to the real archive** and linked the fir…
+  #3872 fix(subscriber): close subscriber sessions idle past a configurable limit  [by AlfredoG87; labels: Bug, Subscriber Plugin; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3872
+    > ## Reviewer Notes **Problem.** PBJ forces the Helidon stream to CLOSED on the client's half-close. After that, a client cancel, RST or disconnect never reaches our pipeline (#3825). A `BlockStreamSubscriberSession` only learns its client is gone when `onNext` throws. Sessions parked waiting for bloc…
+  #3870 docs: add chain-anchored batch verification design for backfill  [by AlfredoG87; labels: Design, Block Node, Documentation, Verification Plugin; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3870
+    > ## Reviewer Notes Adds `docs/design/backfill-batch-verification.md`, a design for verifying a contiguous batch of backfilled blocks with **one** TSS check plus a hash chain check, instead of one TSS check per block. **Status: deferred, low priority.** hedera-cryptography 3.22.0 (hiero-ledger/hiero-c…
+  #3869 feat: Update TSS Library to a New Implementation (0.45 cherry-pick of #3804 + #3853)  [by AlfredoG87; labels: Verification Plugin; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3869
+    > ## Reviewer Notes Cherry-pick of #3853 (`e9354734`) from `main` onto `release/0.45`, together with the PR it depends on: 1. #3804 (`be599efe`) feat(facility-app-state): Make the ApplicationStateFacility a plugin. Clean pick. 2. #3853 (`e9354734`) feat: Update TSS Library to a New Implementation. One…
+  #3865 chore: Follow up to PR #3753  [by ivannov; labels: Improvement, Block Node Tools, pull request; 1 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3865
+    > ## Reviewer Notes * Reports a corrupt hasher state, checkpoint or `jumpstart.bin` file as corrupt and reserves the legacy SHA-384 verdict for files that really have the old layout * Checks the hash count against the leaf count and caps the legacy size range, so trailing garbage now falls back to the…
+[hiero-json-rpc-relay] (watchlist)
+  #5896 chore: bump Solo, consensus node, and mirror node versions  [by swirlds-automation; labels: process; 1 comments]
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/pull/5896
+    > Automated version bump opened by the weekly bump-network-versions workflow. The following pinned versions in `.github/network-versions.env` were updated to the latest published releases: - `NETWORK_TAG`: `v0.77.2` → `v0.77.5` - `MIRROR_NODE_TAG`: `v0.164.1` → `v0.164.2` CI on this PR runs the full s…
+[heka-identity-platform] (other)
+  #248 fix(heka-sso-service): build the Keycloak theme in docker-compose without EXDEV  [by Cybr0; 2 comments]
+    https://github.com/hiero-ledger/heka-identity-platform/pull/248
+    > ## Problem Starting Keycloak as documented in `heka-sso-service/keycloak/README.md` does not work: ```sh docker compose -f docker-compose.dev.yml up -…
+  #247 fix: convert Hedera revocation status list timestamps to seconds  [by Cybr0; 3 comments]
+    https://github.com/hiero-ledger/heka-identity-platform/pull/247
+    > ## Problem Sharing a proof for a revocable AnonCreds credential on Hedera fails in the wallet: ``` Revocation status list for revocation registry did:…
+  #246 fix(heka-wallet): don't block credential rendering on the OCA update check  [by Cybr0; 2 comments]
+    https://github.com/hiero-ledger/heka-identity-platform/pull/246
+    > ## Problem When the wallet holds an AnonCreds credential, the Credentials list on the home screen and the AnonCreds credential offer screen show a spi…
+  #245 fix(heka-wallet): polyfill String.prototype.isWellFormed for Hermes  [by Cybr0; 4 comments]
+    https://github.com/hiero-ledger/heka-identity-platform/pull/245
+    > ## Problem In Release builds, every UTF-8 string encoding in Credo fails with `TypeError: undefined is not a function`. The first visible symptom is t…
+[hiero-consensus-node] (other)
+  #27741 fix: 27740: Don't read the signed state after an async snapshot releases it  [by imalygin; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27741
+    > **Description** On the async path, `SignedStateFileWriter.writeSignedStateFilesToDirectory` releases the state's reservation before the snapshot is wr…
+  #27736 fix: 27735: Stop running garbage scans when MerkleDB compaction is disabled  [by imalygin; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27736
+    > ## Description `stopAndDisableBackgroundCompaction(true)` interrupts running compactions, then waits for all compaction tasks to complete, garbage sca…
+  #27734 fix: fail closed on structurally invalid keys (VLN-294)  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27734
+    > **Consensus:** `ConsensusUpdateTopic` validated `submitKey`/`feeScheduleKey` with `isEmpty`. Both guards now use `isKeyRemoval`; sentinel (key removal…
+  #27733 fix: Validate Ethereum Transaction Call Data if present  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27733
+    > **Description**: Add additional validation for call data and restrict the use of negative values and reject if eth data is already present in the tran…
+  #27732 fix: net NFT supply changes in record token transfer lists  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27732
+    > **Description**: Nets NFT mints, burns and wipes against token balance changes the same way as NFT transfers when a record’s token transfer lists are …
+  #27731 fix: stop a scheduled delete from paying a staking reward twice  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27731
+    > Signed-off-by: Ivan Bankov <ivan.bankov@limechain.tech> Signed-off-by: Josh Marinacci <joshua@marinacci.org> # Conflicts: # hedera-node/hedera-app/src…
+  #27730 fix: truncate `wrapped-record-hashes.pb` on upgrade without jumpstart  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27730
+    > **Description**: Truncates `wrapped-record-hashes.pb` on an upgrade when writing to disk is enabled and no jumpstart is configured. Until now it was o…
+  #27729 chore: Update Block Stream cutover XTS tests  [by derektriley; DRAFT; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27729
+    > **Description**: Replaces the single-hop 0.78 → 0.79 block-stream cutover test with a three-stage cutover scenario (0.79.0 → 0.79.1 → 0.80.0), and spl…
+  #27728 fix: reject royalty fees whose fractions sum above one  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27728
+    > ## What was wrong An NFT can carry several royalty fees. Each one was checked to be at most 100% of the sale price, but their total never was — so a t…
+  #27727 chore: Falcon parameterized sweeps  [by netopyr; 5 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27727
+    > **Description**: This PR adds functionality to run parameterized sweeps of Falcon tests. This allows us to use the same test with different network si…
+  #27726 fix: Bound transaction size checks by retained wire length  [by joshmarinacci; 5 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27726
+    > ## Summary The transaction-size limit and the jumbo per-second byte throttle measured the re-serialized size of the parsed transaction rather than the…
+  #27725 fix: Apply fee exemptions consistently when assessing fractional fees  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27725
+    > **Description** Fractional fee assessment now skips any sender that is exempt from the fee, using the same `CustomFeeExemptions.isPayerExempt` rules a…
+  #27724 fix: staking rewards follow-up - no-credit shortcut and refactoring  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27724
+    > ### skip the settlement scan when no reward was credited settleStakeesAffectedByRewardsPaid re-derives the stake-to-me reward receivers so it can sett…
+  #27723 fix: Resolve Alias to AccountID when revoking allowances  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27723
+    > Resolve Alias to AccountID when revoking allowances
+  #27722 fix: Refactor Ethereum transaction Call data length validation  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27722
+    > Refactor Ethereum transaction Call data length validation
+  #27721 fix: meter auto associations independently of implicit creations  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27721
+    > `shouldThrottleCryptoTransfer` treated implicit creations and auto associations as mutually exclusive, so a transfer doing both metered its associatio…
+  #27720 fix: Optimise OpsDuration Op Code config  [by joshmarinacci; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27720
+    > Further optimise the op codes configuration
+  #27719 chore: Turtle should stop gossip based on the platform status  [by abies; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27719
+    > **Description**: React to platform status in turtle and block gossip if it is not matching allowed list. **Related issue(s)**: Fixes #27528 **Checklis…
+  #27718 feat: Block Stream State Changes diffing support  [by derektriley; DRAFT; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27718
+    > ## Description Adds optional **partial (delta) encoding** for `MapUpdateChange` and `SingletonUpdateChange` in the block stream. When an entity change…
+  #27717 chore: Turtle should impose a simulated delay before a connection is re-established  [by abies; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27717
+    > **Description**: Turtle will now simulate a delay after connection between two nodes is re-established, instead of assuming it is immediate. It will a…
+  #27716 fix: avoid NPE in BaseTranslator when a unit has no user transaction  [by petreze; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27716
+    > **Description**: On main, intermittently there is an NPE in `BaseTranslator.recordFrom`. A CLPR endpoint publication only changes singletons, so the u…
+  #27715 test: Add signature verification benchmark  [by netopyr; DRAFT; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27715
+    > **Description** Adds `EventSignatureValidatorBenchmark` to `consensus-event-intake-impl`. It measures the latency of `DefaultEventSignatureValidator#v…
+[hiero-consensus-specifications] (other)
+  #44 docs(hcs-14): mark the standard published  [by kantorcodes]
+    https://github.com/hiero-ledger/hiero-consensus-specifications/pull/44
+    > ## Summary - Set the HCS-14 document status from Draft to Published. - Remove the unfinished `Last-Call-Ends: (TBD)` line. Discussion links stay in th…
+[hiero-enterprise-java] (other)
+  #395 chore: bump hiero-solo-action to v0.26.0 fix Java REST endpoint for network node queries  [by Ndacyayisenga-droid; labels: status: needs review; 4 comments]
+    https://github.com/hiero-ledger/hiero-enterprise-java/pull/395
+    > ## Description Bumps `hiero-ledger/hiero-solo-action` from `v0.25.0` to the latest release [`v0.26.0`](https://github.com/hiero-ledger/hiero-solo-acti…
+[hiero-ethereum-execution-spec-tests] (other)
+  #6 Hedera Skip List  [by gkozyryatskyy; DRAFT]
+    https://github.com/hiero-ledger/hiero-ethereum-execution-spec-tests/pull/6
+    > ### Description - Doc update - `hedera_skips.toml` skip list + plugin - skip Hedera related tests - pectra phase 2 - any given identified, and triage …
+[solo-containers] (other)
+  #255 fix(backup-uploader): write current-round marker outside /  [by leninmehedy]
+    https://github.com/hiero-ledger/solo-containers/pull/255
+    > ## Description This pull request changes the following: - Writes the current-round marker to `${TMPDIR:-/tmp}/<hostname>.txt` instead of `/<hostname>.…
+
+== MERGED PULL REQUESTS (33 human, 14 bot) ==
+[hiero-sdk-js] (watchlist)
+  #4559 chore: rename indicies to indices in the cryptography entropy helper  [by achintya2k5; 3 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/pull/4559
+    > **Description**: Fixes a typo error in the cryptography package's entropy helper. - Rename the local variable `indicies` to `indices` in `packages/cryptography/src/util/entropy.js` **Related issue(s)**: Fixes #4508 **Notes for reviewer**: All acceptance criteria checks have run successfully from the…
+  #4558 fix: bind the mock gRPC servers to OS-assigned ports in unit tests  [by Jexsie; labels: ready for review 👀; 3 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/pull/4558
+    > **Description**: Unit tests that use `test/unit/Mocker.js` sometimes fail in CI with `listen EADDRINUSE`, because `Mocker` calculated each mock gRPC server's port as `50213 + VITEST_WORKER_ID * 30 + nodeIndex`. Two mock networks open at the same time in one worker got the same ports. And `VITEST_WOR…
+  #4548 fix: pin the default block node chart in solo-setup to one consensus node v0.73.0 supports  [by Jexsie; labels: unresolved comments; 4 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/pull/4548
+    > **Description**: When no `--chart-version` is passed, Solo installs the newest block node chart. Block node 0.41.0 and newer refuse consensus node v0.73.0, which is the default in `solo-setup` and in CI. So a plain `task solo:setup` fails on the latest Solo. When no tag is given and the consensus no…
+  #4546 test: allow a few ms below the 4321 ms mirror deadline in AccountBalanceDeprecation  [by Lemeri123; labels: ready for review 👀; 3 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/pull/4546
+    > **Description**: The test was checking for an exact deadline of 4321ms, but when 1ms or more passed during CI execution, the actual deadline received would be 4320ms or less, causing intermittent failures. The Fix: Changed line 80 from: `expect(fake.requests[0].deadline).to.equal(4321);` To: `expect…
+  #4536 test: surface the last error on request timeout and fail HIP-1300 tests fast  [by Jexsie; labels: ready for review 👀; 4 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/pull/4536
+    > **Description**: Make the flaky HIP-1300 oversize transaction tests in the chromium suite report why they fail and fail fast. Right now a hang only surfaces as `TypeError: Cannot read properties of undefined (reading 'toString')` after 120 s. * Include the last error seen in the `MaxAttemptsOrTimeou…
+[hiero-sdk-python] (watchlist)
+  #2708 feat: restore file transaction fields from protobuf  [by achintya2k5; labels: skill: intermediate, lang: python, status: ready-to-merge, open to community review, approved; 6 comments]
+    https://github.com/hiero-ledger/hiero-sdk-python/pull/2708
+    > **Description**: Implement `_from_protobuf` for file append, update, and delete transactions so `Transaction.from_bytes()` restores their type-specific fields. - Restore file IDs, contents, keys, expiration times, and file memos using existing SDK converters. - Preserve optional-field presence and o…
+[solo] (watchlist)
+  #6231 feat: deprecate consensus dev commands  [by Ivo-Yankov; labels: P1-💎, PR: Needs Team Approval; 3 comments]
+    https://github.com/hiero-ledger/solo/pull/6231
+    > ## Description This PR deprecates the following commands and plans their removal for solo v0.100.0: ``` solo consensus dev-node-add prepare solo consensus dev-node-add submit-transactions solo consensus dev-node-add execute solo consensus dev-node-update prepare solo consensus dev-node-update submit…
+  #6176 feat: deterministic image    [by JeffreyDallas; labels: P1-💎, PR: Needs Team Approval; 4 comments]
+    https://github.com/hiero-ledger/solo/pull/6176
+    > ## Description This pull request changes the following: * Adds an opt-in `NETWORK_NODE_LIFECYCLE_MODE` setting (`solo-container` by default, or `consensus-node-image`) that lets Solo run the hiero-consensus-node deterministic image (`gcr.io/hedera-registry/consensus-node:<version>`) as the root cont…
+[hiero-mirror-node] (watchlist)
+  #14487 Run workflows when relevant files change  [by steven-sheehy; labels: enhancement, github actions, build; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14487
+    > **Description**: * Change acceptance workflow to run whenever a Dockerfile changes * Change native image workflow to run whenever the `spring-conventions.gradle.kts` changes **Related issue(s)**: **Notes for reviewer**: **Checklist** - [ ] Documented (Code comments, README, etc.) - [x] Tested (unit,…
+  #14486 Reject any protobuf field outside the allowlist in `TransferTransaction` in Rosetta  [by bilyana-gospodinova; labels: enhancement, rosetta; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14486
+    > **Description**: parse/combine/submit in Rosetta will now reject `TransferTransaction` transactions with tokenTransfers/nftTransfers that are non-empty. Ref: MN-191
+  #14484 docs: clarify state_changes reflects only EVM storage, not native HTS state  [by BikramBiswas786; labels: documentation; 2 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14484
+    > **Description:** Documents that the contract-results `state_changes` field reflects only EVM storage-slot writes. Successful Hedera system-contract calls (HTS association, mint, burn, key updates) change native ledger state rather than EVM storage, so they return an empty `state_changes` array. This…
+  #14475 fix: parse balance-line account as long and skip out-of-range entity IDs  [by BikramBiswas786; labels: bug, balances; 10 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14475
+    > Fixes #14474 ## Background This is a new finding from auditing related code while rechecking two existing advisories (GHSA-q776-f4m7-g642, GHSA-jfxq-8944-q786) filed against `hiero-consensus-node`. I'm requesting bounty review for this finding directly, under the Hedera Immunefi program's "Incorrect…
+  #14467 Improve token update memo  [by xin-hedera; labels: bug, importer; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14467
+    > **Description**: This PR improves token update memo and align the logic with upstream. **Related issue(s)**: Fixes # **Notes for reviewer**: **Checklist** - [ ] Documented (Code comments, README, etc.) - [ ] Tested (unit, integration, etc.)
+  #14448 Fix contract action to the zero address missing 'to'  [by martingeorgiev1; labels: bug, importer; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14448
+    > **Description**: Contract actions whose sidecar recipient is `0.0.0` (a call to the EVM zero address) were stored with no recipient, so the actions API returned `to: null`. Store them as a zero `recipient_address` so `to` is `0x0000000....000000`. * Store a recipient account or contract with num 0 a…
+  #14399 Integrate tss wraps library 3.22.0  [by xin-hedera; labels: enhancement, importer; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/pull/14399
+    > **Description**: This PR integrates tss wraps library 3.22.0 - Bump TSS Wraps library to 3.22.0 - Add migration to drop `history_proof_verification_key` and add history table - Update tss test artifact with upstream data **Related issue(s)**: Fixes #14326 **Notes for reviewer**: **Checklist** - [x] …
+[hiero-block-node] (watchlist)
+  #3869 feat: Update TSS Library to a New Implementation (0.45 cherry-pick of #3804 + #3853)  [by AlfredoG87; labels: Verification Plugin; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3869
+    > ## Reviewer Notes Cherry-pick of #3853 (`e9354734`) from `main` onto `release/0.45`, together with the PR it depends on: 1. #3804 (`be599efe`) feat(facility-app-state): Make the ApplicationStateFacility a plugin. Clean pick. 2. #3853 (`e9354734`) feat: Update TSS Library to a New Implementation. One…
+  #3853 feat: Update TSS Library to a New Implementation  [by ata-nas; labels: Verification Plugin; 7 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3853
+    > * Bump hedera-cryptography to 3.22.0 and resolve the WRAPS library through its verifier variant * Write the verifier classifier into the block-verification POM for Maven based plugin resolution * Verify TSS block proofs with the ledger id as the only input * Remove the address book and verification …
+  #3832 feat(subscriber): reap completed sessions independent of new requests  [by Nana-EC; labels: Block Node; 1 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3832
+    > ## Issue `SubscriberServicePlugin`'s bookkeeping (`openSessions` map and the `subscriber_open_connections` gauge) is only ever updated as a side effect of a *new* client connecting. That is `SubscribeBlockStreamHandler.apply()` drains whatever sessions have already completed each time it handles a n…
+  #3824 fix(cloud-storage-expanded): ExpandedCloudStoragePlugin delays persisted notifications until the next block  [by ivannov; labels: Bug, pull request, S3 Cloud Archive; 2 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3824
+    > ## Reviewer Notes * Publishes each block's persisted notification on a short scheduled tick instead of waiting for the next block to arrive * Runs the drain and retry ticks on one scheduler thread so notifications stay in block order within each drain * Updates metrics before sending notifications s…
+  #3753 feat: Switch the CLI's block hashing from SHA2-384 to SHA2-256  [by ivannov; labels: Breaking Change, Block Node Tools, pull request; 5 comments]
+    https://github.com/hiero-ledger/hiero-block-node/pull/3753
+    > ## Reviewer Notes * Switches block hashing in the CLI tools from SHA-384 to SHA-256, covering wrap, live-sequential, repair-zips and validate * Marks wrapped blocks as `SHA2_256` in the block header * Shrinks every stored hash slot from 48 to 32 bytes: the hash registry, the saved hasher state and t…
+[hiero-consensus-node] (other)
+  #27736 fix: 27735: Stop running garbage scans when MerkleDB compaction is disabled  [by imalygin; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27736
+    > ## Description `stopAndDisableBackgroundCompaction(true)` interrupts running compactions, then waits for all compaction tasks to complete, garbage sca…
+  #27716 fix: avoid NPE in BaseTranslator when a unit has no user transaction  [by petreze; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27716
+    > **Description**: On main, intermittently there is an NPE in `BaseTranslator.recordFrom`. A CLPR endpoint publication only changes singletons, so the u…
+  #27713 fix: updated 227 dispatcher workflow calling 223 sdct workflow with o…  [by tomzhenghedera; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27713
+    > …nly build tag **Description**: **Related issue(s)**: Fixes # **Notes for reviewer**: **Checklist** - [ ] Documented (Code comments, README, etc.) - […
+  #27664 ci(fix): XTS workflow failure does not publish to slack fix  [by andrewb1269; labels: github_actions; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27664
+    > **Description**: There's an edge case where an XTS failure does not actually publish to Slack. This PR fixes that edge case so we should always see a …
+  #27663 ci: gate all cron jobs with private repo checks  [by andrewb1269; labels: github_actions; 4 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27663
+    > **Description**: Gate all cron jobs with private repo checks so we do not default run cron jobs in a private repo. List of workflows and jobs modified…
+  #27661 chore: Forward events to other nodes  [by netopyr; 6 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27661
+    > **Description**: This PR adds functionality for forwarding events to other nodes. It also adds the deduplicator in the pipeline so that events are ign…
+  #27659 chore: In Otter/Falcon, drop ancient events on delivery  [by abies; 5 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27659
+    > **Description**: Drop events which are ancient for the receiver, without completely rejecting the connection. **Related issue(s)**: Fixes #27524 **Not…
+  #27197 feat: run the MATS HAPI panels with cutover configs in XTS plus various test infra fixes and enhancements  [by petreze; 6 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/pull/27197
+    > ## Summary Prepares the block-stream cutover (#25892). XTS reruns the MATS HAPI panels with the cutover values (gating), so the cutover setup is teste…
+[hiero-cryptography] (other)
+  #752 feat: contextual map-based cache for hinTS CRS and AggregationKey  [by anthony-swirldslabs; labels: released; 6 comments]
+    https://github.com/hiero-ledger/hiero-cryptography/pull/752
+    > **Description**: In the hinTS module, I'm replacing the old single-value static `JNICache` with a new contextual map-based `JNIMapCache`. This allows …
+[hiero-enterprise-java] (other)
+  #395 chore: bump hiero-solo-action to v0.26.0 fix Java REST endpoint for network node queries  [by Ndacyayisenga-droid; labels: status: needs review; 4 comments]
+    https://github.com/hiero-ledger/hiero-enterprise-java/pull/395
+    > ## Description Bumps `hiero-ledger/hiero-solo-action` from `v0.25.0` to the latest release [`v0.26.0`](https://github.com/hiero-ledger/hiero-solo-acti…
+[hiero-mirror-node-explorer] (other)
+  #2806 chore: update node version to 26.10  [by svienot; 1 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node-explorer/pull/2806
+    > **Description**: Node 24 is very soon going to maintenance and v26 becomes active LTS in a couple days. Switch to v26.10 which is now required by pack…
+[solo-docs] (other)
+  #334 docs: document NETWORK_NODE_LIFECYCLE_MODE environment variable  [by JeffreyDallas]
+    https://github.com/hiero-ledger/solo-docs/pull/334
+    > ## Description This pull request changes the following: * Documents the new `NETWORK_NODE_LIFECYCLE_MODE` environment variable (`solo-container` by de…
+  #324 docs(using-environment-variables): document MIRROR_EXTERNAL_DATABASE_CLIENT_IMAGE  [by ddeskov-limechain; labels: P2]
+    https://github.com/hiero-ledger/solo-docs/pull/324
+    > ## Summary Adds a row for `MIRROR_EXTERNAL_DATABASE_CLIENT_IMAGE` to the Mirror Node table. hiero-ledger/solo#6152 adds this variable for issue hiero-…
+
+== CLOSED ISSUES (26 human, 0 bot) ==
+[hiero-sdk-js] (watchlist)
+  #4526 task solo:setup fails: latest block node 0.43.0 refuses the default consensus node v0.73.0  [by Fantomasa; labels: bug; 2 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4526
+  #4370 Flaky unit tests: ClientPingMocking fails with EADDRINUSE from deterministic mock gRPC ports  [by ddeskov-limechain; 5 comments]
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4370
+  + 2 good-first-issue/beginner items: #4517 Flaky unit test: AccountBalanceDeprecation expects an exact 4321 ms mirror deadline; #4508 [Good First Issue]: Rename the misspelled indicies variable in the cryptography package
+[hiero-sdk-python] (watchlist)
+  #2621 feat: implement _from_protobuf for file transactions (from_bytes round-trip)  [by exploreriii; labels: skill: intermediate, lang: python, approved; 8 comments]
+    https://github.com/hiero-ledger/hiero-sdk-python/issues/2621
+[solo] (watchlist)
+  #6169 When installing "solo" the warnings I see in console are quite extreme  [by hendrikebbers; 3 comments]
+    https://github.com/hiero-ledger/solo/issues/6169
+  #4169 Deterministic Container Image Utilization  [by jeromy-cannon; labels: P1-💎, Epic; 1 comments]
+    https://github.com/hiero-ledger/solo/issues/4169
+[hiero-mirror-node] (watchlist)
+  #14474 Balance line parsers drop accounts above 2^31 and abort the whole file on out-of-range entity IDs  [by BikramBiswas786]
+    https://github.com/hiero-ledger/hiero-mirror-node/issues/14474
+  #14416 Contract action to the zero address has no to in the API  [by martingeorgiev1; labels: bug, importer; 2 comments]
+    https://github.com/hiero-ledger/hiero-mirror-node/issues/14416
+  #14326 Integrate new hedera-cryptography-wraps library  [by xin-hedera; labels: enhancement, importer]
+    https://github.com/hiero-ledger/hiero-mirror-node/issues/14326
+[hiero-block-node] (watchlist)
+  #3831 chore: follow-up on non-blocking review comments from #3793 (fix(subscriber): stop waiting for the first live block after session close)  [by Nana-EC; labels: Improvement]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3831
+  #3805 Reap completed subscriber sessions independent of new requests  [by Nana-EC; labels: Improvement]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3805
+  #3751 Align the CLI with the CN SHA2-256 release: header label and golden vectors  [by ivannov; labels: Tests, Block Node Tools]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3751
+  #3721 Switch the CLI's block hashing from SHA2-384 to SHA2-256  [by ivannov; labels: Breaking Change, Block Node Tools]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3721
+  #3720 `ExpandedCloudStoragePlugin` delays persisted notifications until the next block  [by ivannov; labels: Bug, Tests, Block Node, S3 Cloud Archive]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3720
+  #3689 Update TSS Library to a New Implementation  [by ata-nas; labels: Block Node, Verification Plugin; 1 comments]
+    https://github.com/hiero-ledger/hiero-block-node/issues/3689
+[hiero-json-rpc-relay] (watchlist)
+  #5629 localLRUCache.incrBy() is a non-atomic read-modify-write, losing increments under concurrency  [by BikramBiswas786; labels: bug; 10 comments]
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/5629
+[hiero-consensus-node] (other)
+  #27735 Make MerkleDB garbage scans stoppable, so disabling compaction doesn’t wait for a full index scan  [by imalygin]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27735
+  #27712 Fix 227-disp-daily-controllers.yaml call arguments for SDCT workflow  [by tomzhenghedera]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27712
+  #27662 Wrap all cron workflows in private repo checks  [by andrewb1269; labels: github_actions]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27662
+  #27538 Falcon: forward received events and deduplicate them  [by netopyr; 2 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27538
+  #27524 Simulated network: drop copies that are ancient for the receiver at delivery  [by netopyr]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27524
+  #27317 Create a design doc describing a separate connection  [by imalygin; labels: Platform]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/27317
+  #26066 XTS Workflow Failure did not publish to Slack  [by andrewb1269; labels: github_actions; 2 comments]
+    https://github.com/hiero-ledger/hiero-consensus-node/issues/26066
+[hiero-cryptography] (other)
+  #745 hinTS CRS and AggregationKey cache needs context  [by anthony-swirldslabs; labels: released; 4 comments]
+    https://github.com/hiero-ledger/hiero-cryptography/issues/745
+[hiero-enterprise-java] (other)
+  #396 bump hiero-solo-action to v0.26.0  [by Ndacyayisenga-droid; labels: approved; 2 comments]
+    https://github.com/hiero-ledger/hiero-enterprise-java/issues/396
+
+== ONGOING DISCUSSIONS (older items updated in window) ==
+[hiero-improvement-proposals]
+  #1495 HIP 1495: Kubernetes-Native Consensus Node Deployment  [by leninmehedy; 1 comments]
+    https://github.com/hiero-ledger/hiero-improvement-proposals/pull/1495
+[sdk-collaboration-hub]
+  #287 Add HIP-1535 SDK design doc: CLPR  [by Reccetech; 1 comments]
+    https://github.com/hiero-ledger/sdk-collaboration-hub/pull/287
+
+== DISCUSSIONS (GitHub Discussions created or updated in window: 0) ==
+
+== FOCUS REPO: hiero-sdk-js ==
+(Links: https://github.com/hiero-ledger/hiero-sdk-js/issues/<number> works for issues and PRs.)
+
+-- Open PRs: 5 human, 0 bot --
+  #4544 docs: fix spelling mistakes in Duration, FreezeType, Wallet, Client comments  [REVIEW_REQUIRED; by wized2; opened 2d ago; idle 0d; +4/-4; labels: unresolved comments]
+  #4246 fix: TopicUpdateTransaction clear methods now correctly clear fields on the network (#4190)  [NO_REVIEW_DECISION; by deepshikhatutorials; opened 94d ago; idle 3d; +224/-6; labels: unresolved comments]
+  #4344 ci: harden workflow token permissions and pin tck base images  [REVIEW_REQUIRED; by mgarbs; opened 53d ago; idle 3d; +15/-7; labels: unresolved comments]
+  #3027 feat: update module resolution to node16  [DRAFT; by ivaylonikolov7; opened 561d ago; idle 74d; +65/-61; labels: v3]
+  #3642 feat: HIP-1340  [DRAFT; by ivaylonikolov7; opened 274d ago; idle 140d; +4054/-4360; labels: blocked]
+
+-- Open issues: 42 total; 20 active in the last 30 days (listed), 22 older --
+  #4560 NEW Make SDK class registration explicit so the SDK can be tree-shaken without breaking Transaction.fromBytes()  [UNASSIGNED; 1 comments; updated 0d ago; opened 0d ago]
+  #4552 NEW [Beginner]: Reject malformed strings in TransactionId.fromString and add tests  [UNASSIGNED; labels: bug, hacktoberfest, beginner; 1 comments; updated 0d ago; opened 0d ago]
+  #4556 NEW [Intermediate]: clearAccountMemo, clearFileMemo, clearContractMemo and clearTokenMemo do not clear the memo  [UNASSIGNED; labels: bug, hacktoberfest, intermediate; 1 comments; updated 0d ago; opened 0d ago]
+  #4484 [Good First Issue]: Fix spelling mistakes in comments in src/transaction/Transaction.js  [achintya2k5; labels: documentation, Good First Issue, hacktoberfest, Non-Code; 4 comments; updated 0d ago; opened 9d ago]
+  #4557 NEW [Intermediate]: Fix flaky unit test: ClientMirrorNodeHttp deadline test fails when the runner stalls before the first request  [UNASSIGNED; labels: bug, hacktoberfest, intermediate; 0 comments; updated 0d ago; opened 0d ago]
+  #4555 NEW [Intermediate]: Entity ID fromString silently truncates IDs with letters (0.0.12ab34 becomes 0.0.12)  [UNASSIGNED; labels: bug, hacktoberfest, intermediate; 0 comments; updated 0d ago; opened 0d ago]
+  #4554 NEW [Beginner]: Add unit tests for ContractInfo and fix its JSDoc  [UNASSIGNED; labels: hacktoberfest, beginner; 0 comments; updated 0d ago; opened 0d ago]
+  #4553 NEW [Beginner]: Replace wildcard Client<*, *> JSDoc types with Client<Channel, MirrorChannel>  [UNASSIGNED; labels: hacktoberfest, beginner; 0 comments; updated 0d ago; opened 0d ago]
+  #4551 NEW [Good First Issue]: Fix 7 JSDoc lint warnings in the providers, ObjectMap and PrivateKey  [UNASSIGNED; labels: Good First Issue, hacktoberfest; 0 comments; updated 0d ago; opened 0d ago]
+  #4550 NEW [Good First Issue]: Fix spelling mistakes in two error messages and the change-keys example  [UNASSIGNED; labels: Good First Issue, hacktoberfest; 0 comments; updated 0d ago; opened 0d ago]
+  #4549 NEW [Good First Issue]: Fix copy-pasted JSDoc descriptions in NetworkVersionInfo, TransactionRecord, TokenNftTransfer and ManagedNetwork  [UNASSIGNED; labels: documentation, Good First Issue, hacktoberfest, Non-Code; 0 comments; updated 0d ago; opened 0d ago]
+  #4506 [Good First Issue]: Fix spelling mistakes in comments in Duration, FreezeType, Wallet and Client  [armnkumar321-spec; labels: documentation, Good First Issue, hacktoberfest, Non-Code; 4 comments; updated 1d ago; opened 6d ago]
+  #4035 [Beginner]: Add unit tests for Wallet  [dibi91; labels: beginner; milestone: v2.86.0; 8 comments; updated 3d ago; opened 164d ago]
+  #4007 [Beginner]: Add unit tests for TokenRelationship  [sarbojitrana; labels: beginner; 6 comments; updated 3d ago; opened 164d ago]
+  #4287 Clearer errors for ECDSA/ED25519 key-type and key↔account mismatch  [UNASSIGNED; 1 comments; updated 3d ago; opened 86d ago]
+  #4528 Reduce install size: replace or lazy-load ethers (about 19 MB)  [UNASSIGNED; labels: enhancement, dependencies; 0 comments; updated 4d ago; opened 4d ago]
+  #4516 Flaky integration test: AccountIdTest EVM address auto-create gets THROTTLED_AT_CONSENSUS  [GarvSaxena; labels: bug, intermediate; 2 comments; updated 4d ago; opened 5d ago]
+  #4515 Flaky integration test: HIP-1300 oversize transaction hangs until the 120 s timeout in the chromium suite  [Jexsie; labels: bug, intermediate; 2 comments; updated 5d ago; opened 5d ago]
+  #4373 fix: emit Long declarations compatible with Node module resolution  [UNASSIGNED; 1 comments; updated 15d ago; opened 31d ago]
+  #4355 Finalize additive MirrorNodeTokenBalanceQuery extensions after the token-balance proposal  [ddeskov-limechain; labels: enhancement, p2, blocked; 1 comments; updated 20d ago; opened 41d ago]
+  Older open issues: 22 (8 unassigned). Top labels: enhancement 7, beginner 6, intermediate 3, advanced 2, github_actions 1, bug 1, Good First Issue 1, Epic 1
+  Milestones: v2.86.0 (3 open)
+
+-- Recently merged (last 20, bots and dependency bumps removed) --
+  #4559 chore: rename indicies to indices in the cryptography entropy helper  [2026-10-20; by achintya2k5]
+  #4558 fix: bind the mock gRPC servers to OS-assigned ports in unit tests  [2026-10-20; by Jexsie]
+  #4548 fix: pin the default block node chart in solo-setup to one consensus node v0.73.0 supports  [2026-10-19; by Jexsie]
+  #4546 test: allow a few ms below the 4321 ms mirror deadline in AccountBalanceDeprecation  [2026-10-19; by Lemeri123]
+  #4543 chore: fix the lint warnings in src/hooks and AccountInfoQuery  [2026-10-19; by ShauryaBisht]
+  #4542 chore: fix spelling mistakes in Query.js and Executable.js comments  [2026-10-19; by Stackforge-07]
+  #4541 test: add IPv4Address unit tests  [2026-10-19; by krishachra]
+  #4537 ci: run Solo with the PR's SDK in a Solo Compatibility job  [2026-10-16; by ddeskov-limechain]
+  #4536 test: surface the last error on request timeout and fail HIP-1300 tests fast  [2026-10-19; by Jexsie]
+  #4534 ci: remove the unused Renovate workflow  [2026-10-15; by Fantomasa]
+  #4533 chore(release): v2.90.1  [2026-10-15; by Fantomasa]
+  #4532 build: stop publishing duplicate .d.ts and .proto files in @hiero-ledger/proto  [2026-10-16; by ddeskov-limechain]
+  #4530 fix: Added unit tests for FileInfo and fixed two copy-paste JSDocs lines  [2026-10-15; by Lemeri123]
+  #4529 test: fix spelling mistakes in unit test comments and names  [2026-10-15; by 08abhinav]
+  #4525 fix(tck): stop turning ThresholdKey keys into an empty KeyList on @hiero-ledger/proto 2.32.0  [2026-10-15; by Fantomasa]
+  #4523 fix: Lower the sdk package size budget from 40 MB to 25 MB  [2026-10-15; by 08abhinav]
+  #4521 chore(release): v2.90.0  [2026-10-14; by Fantomasa]
+  #4520 fix: implemented unit tests for NftId and fixed the fromString() method  [2026-10-14; by Lemeri123]
+  #4519 build: stop embedding the source in the lib source maps  [2026-10-14; by ddeskov-limechain]
+  #4514 fix(deps): drop unused dependencies  [2026-10-14; by Jexsie]
+
+== FOCUS REPO: hiero-sdk-tck ==
+(Links: https://github.com/hiero-ledger/hiero-sdk-tck/issues/<number> works for issues and PRs.)
+
+-- Open PRs: 22 human, 1 bot --
+  #706 feat: python compatibility  [NO_REVIEW_DECISION; by exploreriii; opened 54d ago; idle 0d; +234/-1]
+  #762 fix(ci): make check-test-results use the action's verdict and load mochawesome/register  [REVIEW_REQUIRED; by ddeskov-limechain; opened 6d ago; idle 6d; +257/-17; labels: github_actions]
+  #636 ci: add Swift SDK compatibility workflow  [REVIEW_REQUIRED; by rwalworth; opened 194d ago; idle 7d; +300/-5]
+  #708 fix(tck): use bytes field in contract-call-query asserts  [NO_REVIEW_DECISION; by Steve0x2a; opened 43d ago; idle 11d; +271/-47]
+  #644 chore: refactor `ConsensusInfoClient` to support multiple networks  [NO_REVIEW_DECISION; by MonaaEid; opened 172d ago; idle 12d; +84/-22]
+  #693 docs: fix typo fileID -> fileId in FileDeleteTransaction output parameters  [NO_REVIEW_DECISION; by MaxwellM34; opened 57d ago; idle 12d; +1/-1]
+  #727 [Snyk] Fix for 7 vulnerabilities  [REVIEW_REQUIRED; by lfdt-bot; opened 20d ago; idle 20d; +491/-1104]
+  #723 fix(ci): run JS TCK server against the built SDK  [REVIEW_REQUIRED; by ddeskov-limechain; opened 21d ago; idle 21d; +14/-5]
+  #722 ci: wait for the JS and Go TCK servers before running tests  [REVIEW_REQUIRED; by ddeskov-limechain; opened 21d ago; idle 21d; +36/-2]
+  #682 feat: Add Hip Tracking  [DRAFT; by aceppaluni; opened 71d ago; idle 70d; +1021/-117]
+  #657 feat: add HIP-1261 FeeEstimateQuery tests  [REVIEW_REQUIRED; by ddeskov-limechain; opened 98d ago; idle 97d; +586/-0]
+  #652 For conflicts  [DRAFT; by xyclone-designs; opened 127d ago; idle 127d; +8054/-8]
+  #650 feat: add HIP-1313 high-volume tests to AccountCreateTransaction  [REVIEW_REQUIRED; by mariodimitrovv; opened 151d ago; idle 151d; +138/-0]
+  #635 fix: TCK C++ Server init  [DRAFT; by gsstoykov; opened 200d ago; idle 180d; +2/-1]
+  #622 chore: audit repo  [REVIEW_REQUIRED; by PavelSBorisov; opened 238d ago; idle 187d; +56/-4]
+  #619 [Snyk] Fix for 2 vulnerabilities  [REVIEW_REQUIRED; by lfdt-bot; opened 248d ago; idle 248d; +234/-280]
+  #569 [Snyk] Security upgrade axios from 1.11.0 to 1.12.0  [REVIEW_REQUIRED; by lfdt-bot; opened 396d ago; idle 396d; +6/-6]
+  #556 [Snyk] Upgrade eslint-plugin-prettier from 5.5.0 to 5.5.4  [REVIEW_REQUIRED; by lfdt-bot; opened 410d ago; idle 410d; +6/-6]
+  #555 [Snyk] Upgrade eslint from 9.29.0 to 9.33.0  [REVIEW_REQUIRED; by lfdt-bot; opened 410d ago; idle 410d; +27/-40]
+  #554 [Snyk] Upgrade @typescript-eslint/parser from 8.38.0 to 8.39.1  [REVIEW_REQUIRED; by lfdt-bot; opened 410d ago; idle 410d; +56/-44]
+  #553 [Snyk] Upgrade @typescript-eslint/eslint-plugin from 8.35.1 to 8.39.1  [REVIEW_REQUIRED; by lfdt-bot; opened 410d ago; idle 410d; +136/-123]
+  #552 [Snyk] Upgrade typescript from 5.8.3 to 5.9.2  [REVIEW_REQUIRED; by lfdt-bot; opened 410d ago; idle 410d; +129/-174]
+
+-- Open issues: 169 total; 13 active in the last 30 days (listed), 156 older --
+  #771 NEW Proposal: Design of the Hiero TCK GitHub Action  [UNASSIGNED; 0 comments; updated 0d ago; opened 0d ago]
+  #735 Epic: expose the TCK as a composite GitHub Action for SDK and downstream CI  [Fantomasa; labels: enhancement, Epic, github_actions; 4 comments; updated 6d ago; opened 13d ago]
+  #728 Complete remaining language coverage for mirror HBAR balance queries  [ddeskov-limechain; 1 comments; updated 6d ago; opened 20d ago]
+  #736 Epic: publish the TCK as a versioned CLI package on npm (@hiero-ledger/hiero-sdk-tck)  [UNASSIGNED; labels: enhancement; 1 comments; updated 8d ago; opened 12d ago]
+  #709 Refactor ConsensusInfoClient for clearer network handling  [UNASSIGNED; 1 comments; updated 12d ago; opened 42d ago]
+  #737 Publish the TCK Docker image under the hiero-ledger organization (`ghcr.io/hiero-ledger/hiero-sdk-tck`)  [UNASSIGNED; 0 comments; updated 12d ago; opened 12d ago]
+  #713 Fix the ContractCallQuery test specification  [UNASSIGNED; 1 comments; updated 15d ago; opened 34d ago]
+  #730 Replace running on ubuntu latest runners with self-hosted runners  [UNASSIGNED; 2 comments; updated 19d ago; opened 19d ago]
+  #729 docs: document that local networks must expose mirror web3 on 127.0.0.1:8545  [Fantomasa; labels: P2, documentation; 0 comments; updated 20d ago; opened 20d ago]
+  #715 Align TCK with AccountBalanceQuery Stage 2 deprecation and mirror balance replacements  [ddeskov-limechain; 1 comments; updated 20d ago; opened 25d ago]
+  #717 Add a controllable mock mirror REST endpoint for HTTP transport tests  [UNASSIGNED; 0 comments; updated 25d ago; opened 25d ago]
+  #716 Align getMirrorNodeTokenBalance with the final token balance contract  [UNASSIGNED; 0 comments; updated 25d ago; opened 25d ago]
+  #714 Align Contract Bytecode Query method name with TCK specification  [UNASSIGNED; 0 comments; updated 29d ago; opened 29d ago]
+  Older open issues: 156 (139 unassigned). Top labels: Epic 30, enhancement 16, github_actions 5, documentation 4, Bug 2, New Feature 2, Question 1, help wanted 1
+  Milestones: v0.12.0 (3 open)
+
+-- Recently merged (last 20, bots and dependency bumps removed) --
+  #754 docs: pin the action examples to v0.14.0  [2026-10-13; by Fantomasa]
+  #753 chore: release v0.14.0  [2026-10-12; by Fantomasa]
+  #749 feat: add a composite GitHub Action that runs the TCK against a running JSON-RPC server  [2026-10-12; by Fantomasa]
+  #734 test: block ClientPing proxy calls with UNAVAILABLE instead of closing the listener  [2026-10-02; by ddeskov-limechain]
+  #732 ci: forward mirror REST to 38081 in Java compatibility workflow  [2026-10-02; by ddeskov-limechain]
+  #726 ci: forward mirror REST to port 38081 for the Go SDK  [2026-09-29; by ddeskov-limechain]
+  #725 chore: release v0.13.0  [2026-09-29; by Fantomasa]
+  #720 test: add MirrorNodeTokenBalanceQuery tests and zero/token-holder HBAR cases  [2026-09-25; by ddeskov-limechain]
+  #719 test: replace the AccountBalanceQuery suite with Stage 2 deprecation checks  [2026-09-25; by ddeskov-limechain]
+  #718 test: verify balances without the deprecated AccountBalanceQuery  [2026-09-25; by ddeskov-limechain]
+  #712 fix: assert deletedAt in ScheduleInfoQuery deleted-schedule test  [2026-09-28; by ddeskov-limechain]
+  #710 fix: keep preflight's socket timeout out of the tests' keep-alive pool  [2026-09-09; by ddeskov-limechain]
+  #707 ci: harden workflows for OpenSSF Scorecard  [2026-10-07; by mgarbs]
+  #691 test: implement MirrorNodeAccountBalanceQuery tests  [2026-09-09; by ddeskov-limechain]
+  #690 docs: add MirrorNodeAccountBalanceQuery test specification  [2026-09-09; by ddeskov-limechain]
+  #689 test: add Client.ping() Stage 1 and AccountBalanceQuery Stage 2 deprecation tests  [2026-09-25; by ddeskov-limechain]
+  #688 fix: accept omitted liveHashes field in AccountInfoQuery test  [2026-08-13; by Fantomasa]
+
+== FOCUS REPO: hiero-sdk-java ==
+(Links: https://github.com/hiero-ledger/hiero-sdk-java/issues/<number> works for issues and PRs.)
+
+-- Open PRs: 6 human, 0 bot --
+  #3004 chore: Refactor MirrorNode queries to use the MirrorNodeHttpClient  [REVIEW_REQUIRED; by manishdait; opened 0d ago; idle 0d; +236/-400]
+  #3003 fix(docs): correct README typo 'interacting a' to 'interacting with'  [REVIEW_REQUIRED; by Jah-yee; opened 1d ago; idle 0d; +1/-1]
+  #2810 chore: align CODEOWNERS to shared SDK teams  [DRAFT; by ddeskov-limechain; opened 112d ago; idle 112d; +12/-12]
+  #2805 chore: update CODEOWNERS to reflect new maintainers  [REVIEW_REQUIRED; by jwagantall; opened 119d ago; idle 119d; +12/-12]
+  #2648 fix: Version number need to be changed after releases  [REVIEW_REQUIRED; by hendrikebbers; opened 223d ago; idle 223d; +1/-1]
+  #2219 TCK moved to hiero namespace  [REVIEW_REQUIRED; by hendrikebbers; opened 619d ago; idle 619d; +150/-145]
+
+-- Open issues: 35 total; 5 active in the last 30 days (listed), 30 older --
+  #3009 NEW Overloads method to pass timeout to MirrorNodeContractCallQuery and MirrorContractEstimateGasQuery  [manishdait; 2 comments; updated 0d ago; opened 0d ago]
+  #2997 Refactor MirrorNode queries to use the MirrorNodeHttpClient  [manishdait; 3 comments; updated 3d ago; opened 5d ago]
+  #2676 Support Pectra EVM Type 4 Transaction Encoding (EIP-7702)  [mustafauzunn; labels: enhancement; 4 comments; updated 5d ago; opened 208d ago]
+  #2567 HIP-1340: EOA Code Delegation  [emiliyank, mustafauzunn; labels: enhancement; 0 comments; updated 5d ago; opened 272d ago]
+  #2980 [Good First Issue]: Fix message in README.md  [Alpha2820; labels: Good First Issue; 5 comments; updated 6d ago; opened 18d ago]
+  Older open issues: 30 (14 unassigned). Top labels: enhancement 19, backlog 10, services 9, protobuf 8, p2 3, bug 2, Epic 2, github_actions 1
+
+-- Recently merged (last 20, bots and dependency bumps removed) --
+  #2998 chore: release 2.79.0  [2026-10-14; by mustafauzunn]
+  #2996 refactor: Transaction handling  [2026-10-14; by mustafauzunn]
+  #2995 ci: add TCK compatibility job  [2026-10-15; by Utkarsh-rwt]
+  #2986 docs: fix Discord links in contributing guide  [2026-10-13; by ThatsMeGIT]
+  #2981 refactor: file append  [2026-10-02; by mustafauzunn]
+  #2974 refactor: getSignatures  [2026-10-01; by mustafauzunn]
+  #2967 chore: release 2.78.0  [2026-09-28; by mustafauzunn]
+  #2966 feat: token balance  [2026-09-25; by mustafauzunn]
+  #2963 feat(tck): add ping, mirror balance and AccountBalanceQuery deprecation methods  [2026-10-06; by ddeskov-limechain]
+  #2962 chore(tck): remove Lombok by converting JSON-RPC params to records  [2026-09-30; by Ndacyayisenga-droid]
+  #2960 refactor:  sync getReceipt()/getRecord()  [2026-09-23; by mustafauzunn]
+  #2956 docs: fix typo in Users and Maintainers guidelines section  [2026-09-21; by Tatianamckissett17]
+
+== FOCUS REPO: solo ==
+(Links: https://github.com/hiero-ledger/solo/issues/<number> works for issues and PRs.)
+
+-- Open PRs: 29 human, 5 bot --
+  #6247 fix: dump ss -tn socket state when smart contract test times out  [REVIEW_REQUIRED; by JeffreyDallas; opened 0d ago; idle 0d; +38/-1; labels: P1-💎, PR: Needs Team Approval, In Review 👀]
+  #4998 feat: set pvcs to true by default  [CHANGES_REQUESTED; by Ivo-Yankov; opened 98d ago; idle 0d; +962/-9; labels: P2-⏭️💎, Validating]
+  #6238 feat(tck): add the first JS SDK lane  [NO_REVIEW_DECISION; by ddeskov-limechain; opened 3d ago; idle 0d; +1793/-0]
+  #6219 ci: cn v0.79.0-alpha.2, bn v0.45.0-rc1, mn v0.165.0-alpha2  [DRAFT; by JeffreyDallas; opened 4d ago; idle 0d; +14/-13; labels: P1-💎, Blocked, PR: Merge Conflicts, Validating]
+  #5165 docs(design): add Solo TCK compatibility gate design  [REVIEW_REQUIRED; by boris-bonin; opened 90d ago; idle 0d; +1414/-0; labels: P1-💎, PR: Unresolved Comments]
+  #6140 ci: cn v0.78.0-rc.9  [DRAFT; by JeffreyDallas; opened 14d ago; idle 0d; +21/-14; labels: P1-💎, Blocked, Validating]
+  #6242 docs: document Linux installation script  [REVIEW_REQUIRED; by mayanksinha17; opened 1d ago; idle 0d; +66/-0; labels: PR: Unresolved Comments]
+  #6215 feat: disable wraps for CN 0.79.0 and greater  [REVIEW_REQUIRED; by Ivo-Yankov; opened 4d ago; idle 0d; +252/-18; labels: P1-💎, PR: Needs Team Approval]
+  #6109 feat: offer to warm the image cache on Solo's first run  [REVIEW_REQUIRED; by Fantomasa; opened 18d ago; idle 0d; +464/-7; labels: P1-💎, PR: Unresolved Comments]
+  #6245 ci: add installer E2E workflow with Linux validation  [DRAFT; by Ivo-Yankov; opened 0d ago; idle 0d; +281/-18; labels: P1-💎]
+  #6244 fix: isolate TCK changes from Solo release tooling  [CHANGES_REQUESTED; by mayanksinha17; opened 0d ago; idle 0d; +9019/-2801]
+  #6220 ci: add multicluster-component-image example to validate component image load  [REVIEW_REQUIRED; by JeffreyDallas; opened 4d ago; idle 0d; +411/-0; labels: P1-💎, PR: Needs Team Approval]
+  #6228 fix: ping a configured node account in node client health checks  [REVIEW_REQUIRED; by ddeskov-limechain; opened 3d ago; idle 0d; +186/-79; labels: P1-💎, PR: Unresolved Comments]
+  #6154 docs: add macos installer design doc  [APPROVED; by Ivo-Yankov; opened 13d ago; idle 0d; +258/-0; labels: Design, P1-💎, PR: Needs Team Approval]
+  #6021 feat(cli): feature flag implementation  [DRAFT; by jan-milenkov; opened 28d ago; idle 0d; +1959/-490; labels: P1-💎, PR: Merge Conflicts]
+  #6233 feat: build and publish a linux-arm64 SEA binary  [APPROVED; by Fantomasa; opened 3d ago; idle 0d; +61/-24; labels: New Feature, P1-💎, PR: Ready to Merge]
+  #6232 fix: handle older cosign releases in the Linux installer signature check  [APPROVED; by Fantomasa; opened 3d ago; idle 0d; +123/-0; labels: Bug, P1-💎, PR: Ready to Merge]
+  #6230 fix: use schema-valid namespace selectors in the Prometheus stack values  [APPROVED; by jan-milenkov; opened 3d ago; idle 0d; +3/-6; labels: P0-🔥, PR: Needs Team Approval, PR: Needs Manager Approval]
+  #6104 docs: add self-upgrade design for Solo installers  [REVIEW_REQUIRED; by ddeskov-limechain; opened 18d ago; idle 0d; +386/-1; labels: P1-💎]
+  #6222 fix: use empty namespace selectors in prometheus stack values  [APPROVED; by JeffreyDallas; opened 4d ago; idle 0d; +29/-6; labels: P0-🔥, Validating]
+  #6235 fix: isolate Solo TCK release versioning and packaging  [REVIEW_REQUIRED; by ddeskov-limechain; opened 3d ago; idle 3d; +179/-11; labels: P1-💎]
+  #6101 test: add Linux installer E2E validation  [DRAFT; by ddeskov-limechain; opened 18d ago; idle 3d; +820/-0; labels: P1-💎, PR: Merge Conflicts]
+  #6196 docs: add Windows installer design and MSYS2 package audit  [DRAFT; by Ivo-Yankov; opened 6d ago; idle 4d; +277/-0; labels: P1-💎]
+  #5178 feat: add `--grafana-alloy` flag to deploy Grafana Alloy and Loki through Solo  [DRAFT; by Fantomasa; opened 89d ago; idle 5d; +510/-83; labels: P1-💎, PR: Merge Conflicts]
+  #6014 fix: add memory limits for Minio in one-shot deployments  [DRAFT; by Ivo-Yankov; opened 31d ago; idle 5d; +59/-6; labels: P1-💎]
+  #6186 chore: enable typed linting with recommendedTypeChecked  [DRAFT; by ddeskov-limechain; opened 10d ago; idle 5d; +147/-134; labels: P3-⏭️⏭️💎, PR: Ready to Merge, PR: Merge Conflicts]
+  #6020 refactor: hoist GitHub-release discovery and getVersion onto a shared dependency manager  [REVIEW_REQUIRED; by ddeskov-limechain; opened 28d ago; idle 6d; +262/-462; labels: P1-💎]
+  #6087 feat: rustfs prototype  [DRAFT; by Ivo-Yankov; opened 19d ago; idle 7d; +420/-3; labels: P0-🔥, PR: Merge Conflicts]
+  #5315 feat: add cluster-ref state start/stop/info commands for container engines  [DRAFT; by ddeskov-limechain; opened 87d ago; idle 7d; +862/-7; labels: P1-💎]
+
+-- Open issues: 190 total; 56 active in the last 30 days (listed), 134 older --
+  #5172 migrate from the solo-charts/solo-deployment Helm Chart to a new chart that represents a single Consensus Node solo-charts/consensus-node  [jan-milenkov; labels: P1-💎; 0 comments; updated 0d ago; opened 90d ago]
+  #6246 NEW Migration test: smart contract test hangs 6 min with no relay traffic; add ss -tn diagnostics on timeout
+  [JeffreyDallas; labels: Bug, P1-💎, Testing Improvements; 0 comments; updated 0d ago; opened 0d ago]
+  #6224 Fix node-client health checks that ping the operator account  [ddeskov-limechain; 0 comments; updated 0d ago; opened 4d ago]
+  #6243 NEW Support multiple mirror nodes in the same namespace  [UNASSIGNED; labels: P2-⏭️💎; 1 comments; updated 0d ago; opened 0d ago]
+  #5731 test: E2E installer validation — Linux
+  [Ivo-Yankov; labels: P1-💎; 0 comments; updated 0d ago; opened 74d ago]
+  #6213 docs: document the Linux install script and the download-inspect-run option  [UNASSIGNED; labels: P1-💎, Documentation; 1 comments; updated 1d ago; opened 4d ago]
+  #6241 Block Node 0.45.0: new TSS library, CN 0.79 GA pairing and TSS data reset  [UNASSIGNED; 0 comments; updated 3d ago; opened 3d ago]
+  #6227 Report unrecoverable image failures before the one-shot dependency timeout  [JeffreyDallas, Copilot; 0 comments; updated 3d ago; opened 4d ago]
+  #6226 Preserve the registry when deploying a Block Node candidate image  [JeffreyDallas, Copilot; 0 comments; updated 3d ago; opened 4d ago]
+  #6237 Implement the first JS SDK lane of the Solo TCK  [UNASSIGNED; 0 comments; updated 3d ago; opened 3d ago]
+  #6211 feat: build and publish a musl Linux SEA binary for Alpine  [UNASSIGNED; labels: New Feature, P1-💎; 0 comments; updated 3d ago; opened 4d ago]
+  #6234 Isolate Solo TCK changes from Solo release tooling and npm packaging  [UNASSIGNED; 0 comments; updated 3d ago; opened 3d ago]
+  #6212 feat: build and publish a linux-arm64 SEA binary  [Fantomasa; labels: New Feature, P1-💎; 0 comments; updated 3d ago; opened 4d ago]
+  #6214 fix: Linux installer aborts when the installed cosign is older than 2.4.2  [Fantomasa; labels: Bug, P1-💎; 1 comments; updated 3d ago; opened 4d ago]
+  #6225 Prevent Falcon component-image flags from leaking into other components  [JeffreyDallas, Copilot; 0 comments; updated 3d ago; opened 4d ago]
+  #6218 Deprecate step-by-step dev-node-* and dev-freeze consensus subcommands
+  [Ivo-Yankov; labels: P1-💎, Tech Debt; 0 comments; updated 3d ago; opened 4d ago]
+  #6229 Prometheus stack install fails under server-side apply due to invalid namespace selectors
+  [jan-milenkov; labels: Bug, P0-🔥; 0 comments; updated 3d ago; opened 3d ago]
+  #6223 Track Solo TCK design decisions, deployment blockers and CI adoption  [ddeskov-limechain; 0 comments; updated 4d ago; opened 4d ago]
+  #5910 OpenSSF — **Branch-Protection** improvements  [boris-bonin, jan-milenkov; labels: P2-⏭️💎, Good First Issue; 3 comments; updated 4d ago; opened 53d ago]
+  #6221 fix: Prometheus stack install fails on clusters with older Prometheus Operator CRDs (any field not declared in schema)
+  [JeffreyDallas; labels: Bug, P0-🔥; 0 comments; updated 4d ago; opened 4d ago]
+  #6209 Add facility-app-state to the Block Node plugin list in the multicluster backup and restore example  [JeffreyDallas, Copilot; 1 comments; updated 4d ago; opened 5d ago]
+  #6174 refactor: remove WRAPS proving-key handling  [Ivo-Yankov; labels: Improvement, P1-💎; 0 comments; updated 4d ago; opened 11d ago]
+  #6094 feat: warm the image cache on Solo's first run  [Fantomasa; labels: P1-💎; 0 comments; updated 4d ago; opened 19d ago]
+  #6202 Pair Block Node 0.45 with Consensus Node 0.80 (SHA-256 block hashing)  [JeffreyDallas; 1 comments; updated 5d ago; opened 6d ago]
+  #5718 research: identify minimal MSYS2 package set for Solo on Windows
+  [Ivo-Yankov; labels: P1-💎; 7 comments; updated 5d ago; opened 74d ago]
+  #5909 OpenSSF — **CII-Best-Practices** improvements  [boris-bonin, jan-milenkov; labels: P2-⏭️💎; 5 comments; updated 5d ago; opened 53d ago]
+  #5724 feat: build macOS DMG installer
+  [Ivo-Yankov; labels: P1-💎; 0 comments; updated 6d ago; opened 74d ago]
+  #1043 Get TypeScript typed linting enabled  [ddeskov-limechain; labels: P3-⏭️⏭️💎; 0 comments; updated 10d ago; opened 658d ago]
+  #6173 feat: support CN v0.79 and v0.79.1  [Ivo-Yankov; labels: P1-💎, Epic; 0 comments; updated 11d ago; opened 11d ago]
+  #6175 chore: bump default and edge component versions to the CN v0.79 matrix  [UNASSIGNED; labels: Improvement, P1-💎; 0 comments; updated 11d ago; opened 11d ago]
+  #1492 Decouple local config from the business logic layer  [UNASSIGNED; labels: P1-💎, Blocked; 0 comments; updated 11d ago; opened 601d ago]
+  #6162 Migrate Solo from Prior to Current Version > ERC20 transferFrom() hangs until mocha 360s timeout (prior-release phase)
+  [JeffreyDallas; labels: Bug, P0-🔥; 1 comments; updated 12d ago; opened 13d ago]
+  #1535 enhance mirror node external database functionality to deploy a container and run `database-seeding-query.sql` against the database  [ddeskov-limechain; labels: P2-⏭️💎; 0 comments; updated 13d ago; opened 601d ago]
+  #4780 Set pvcs to true by default  [Ivo-Yankov, JeffreyDallas; labels: Feature Enhancement, P1-💎; 0 comments; updated 14d ago; opened 118d ago]
+  #2141 LocalConfigRuntimeState: evaluate & refactor/extract local config file migration logic  [ddeskov-limechain; labels: P2-⏭️💎, Tech Debt; 0 comments; updated 14d ago; opened 495d ago]
+  #578 Get rid of `init` subcommand  [JeffreyDallas; labels: P2-⏭️💎, Blocked; 1 comments; updated 18d ago; opened 763d ago]
+  #5728 feat: implement self-upgrade flow in CLI
+  [UNASSIGNED; labels: P1-💎; 1 comments; updated 18d ago; opened 74d ago]
+  #5722 design: self-upgrade mechanism (version check + binary swap)
+  [ddeskov-limechain; labels: P1-💎; 0 comments; updated 18d ago; opened 74d ago]
+  #5727 ci: generate and publish installer artifacts in the release pipeline
+  [UNASSIGNED; labels: P1-💎; 0 comments; updated 19d ago; opened 74d ago]
+  #3519 protect key/value settings in config files (settings.txt/application.properties) for settings that will break CN/Solo  [UNASSIGNED; labels: New Feature, P1-💎, Blocked; 2 comments; updated 19d ago; opened 227d ago]
+  #6055 Integrate the pgsty/silo helm chart  [UNASSIGNED; labels: Feature Enhancement, Pending Triage; 0 comments; updated 20d ago; opened 25d ago]
+  #2807 design: get Solo off of minio due to their docker containers being removed  [Ivo-Yankov; labels: P0-🔥; 1 comments; updated 20d ago; opened 357d ago]
+  #6034 Windows: one-shot deploy fails with EPERM race on cached podlogs CRD YAML  [mayanksinha17; labels: Bug, P1-💎; 2 comments; updated 21d ago; opened 26d ago]
+  #1544 Initiative: Feature Flags for Solo  [jan-milenkov; labels: P1-💎; 0 comments; updated 25d ago; opened 601d ago]
+  #5422 refactor: hoist duplicated GitHub-release discovery/getVersion onto BaseDependencyManager  [ddeskov-limechain; labels: P1-💎; 0 comments; updated 28d ago; opened 83d ago]
+  #6019 design the Solo TCK  [jan-milenkov; labels: Design, P1-💎; 0 comments; updated 28d ago; opened 28d ago]
+  #4272 Initiative: create Solo Technology Compatibility Kit (TCK)  [jan-milenkov; labels: P1-💎; 0 comments; updated 29d ago; opened 165d ago]
+  #3593 Initiative: Reduce round trip test time  [jan-milenkov; labels: P1-💎; 0 comments; updated 29d ago; opened 220d ago]
+  #341 Initiative: add capabilities to use Consensus Node Deterministic Image  [jan-milenkov; labels: P1-💎, Internal Requirement; 0 comments; updated 29d ago; opened 871d ago]
+  #5106 Initiative: Solo Installation Improvements  [jan-milenkov; labels: P1-💎; 0 comments; updated 29d ago; opened 95d ago]
+  #5022 Initiative: Windows based Solo Contributor Experience  [jan-milenkov; labels: P1-💎, Blocked; 0 comments; updated 29d ago; opened 98d ago]
+  #4175 Initiative: EVM Test Framework & Toolchain Integrations  [jan-milenkov; labels: P1-💎, Needs Refinement; 0 comments; updated 29d ago; opened 172d ago]
+  #5018 Initiative: 2026 Q3 Technical Debt Reduction  [jan-milenkov; labels: P1-💎; 0 comments; updated 29d ago; opened 98d ago]
+  #5096 Initiative: migrate solo-deployment chart into a single Network Node  [jan-milenkov; labels: P1-💎; 0 comments; updated 29d ago; opened 95d ago]
+  #5002 Initiative: 2026 Q3 Address User Experience Issues  [jan-milenkov; labels: P1-💎; 0 comments; updated 29d ago; opened 98d ago]
+  #4997 Initiative: Migrate from Hashgraph to Hiero-Ledger  [jan-milenkov; labels: P1-💎; 0 comments; updated 29d ago; opened 98d ago]
+  Older open issues: 134 (96 unassigned). Top labels: P1-💎 64, Blocked 56, P2-⏭️💎 44, P3-⏭️⏭️💎 17, Epic 10, Feature Enhancement 8, Tech Debt 6, P4-🎂 6
+
+-- Recently merged (last 20, bots and dependency bumps removed) --
+  #6231 feat: deprecate consensus dev commands  [2026-10-19; by Ivo-Yankov]
+  #6216 feat: bump relay node version to 0.80.1  [2026-10-16; by JeffreyDallas]
+  #6208 fix: skip Prometheus CRDs already present in the cluster during cluster setup  [2026-10-14; by JeffreyDallas]
+  #6207 fix(ci): retry a Helm OCI chart pull stopped by a cluster DNS failure  [2026-10-14; by JeffreyDallas]
+  #6205 chore: pin the block node send socket buffer in the default values  [2026-10-15; by Ivo-Yankov]
+  #6200 chore(release): update readme and legacy versions for release 0.93.0  [2026-10-13; by Ivo-Yankov]
+  #6199 fix: newly added nightly solo-containers-image test  [2026-10-14; by Ivo-Yankov]
+  #6195 fix: set the genesis gRPC certificate hash and verify the address book files  [2026-10-14; by Fantomasa]
+  #6194 fix: resolve the open CodeQL code scanning alerts  [2026-10-14; by Fantomasa]
+  #6193 fix(ci): use registry mirrors for WSL dockerd on Windows runner  [2026-10-12; by JeffreyDallas]
+  #6185 fix: remove dot-object to drop deprecated glob and inflight from install  [2026-10-12; by ddeskov-limechain]
+  #6184 fix: keep the deployment lease on one cluster in multi-cluster deployments  [2026-10-12; by ddeskov-limechain]
+  #6183 feat(mirror-node): add `--debug-mirror-node-component` to open the importer JVM debug port  [2026-10-12; by ddeskov-limechain]
+  #6182 ci: add solo-containers image regression check to nightly extended tests  [2026-10-12; by ddeskov-limechain]
+  #6181 ci: upload unit and e2e coverage to codecov with separate flags  [2026-10-14; by ddeskov-limechain]
+  #6179 feat: add component compatability matrix  [2026-10-14; by Ivo-Yankov]
+  #6178 fix: use the passed-in domain name for the node add gRPC service endpoint  [2026-10-14; by Fantomasa]
+  #6176 feat: deterministic image    [2026-10-19; by JeffreyDallas]
+  #6171 fix: automatically retry node start when a state restore lands in FREEZE_COMPLETE  [2026-10-14; by JeffreyDallas]
+  #6170 ci: also raise relay LOG_LEVEL across the migration test's relay upgrade  [2026-10-14; by JeffreyDallas]
+
+== FOCUS REPO: hiero-solo-action ==
+(Links: https://github.com/hiero-ledger/hiero-solo-action/issues/<number> works for issues and PRs.)
+
+-- Open PRs: 2 human, 0 bot --
+  #126 chore: audit  [CHANGES_REQUESTED; by PavelSBorisov; opened 235d ago; idle 13d; +69/-0]
+  #121 feat: Introduce ingress service  [DRAFT; by gsstoykov; opened 308d ago; idle 308d; +1/-1]
+
+-- Open issues: 4 total; 0 active in the last 30 days (listed), 4 older --
+  Older open issues: 4 (0 unassigned). Top labels: help wanted 1, hacktoberfest 1, Good First Issue Candidate 1
+
+-- Recently merged (last 20, bots and dependency bumps removed) --
+  #163 chore: add Noah Tayebwa as maintainer  [2026-10-13; by Jexsie]
+  #157 refactor: move action logic into scripts and drop pre-0.44 and local support  [2026-10-07; by Ndacyayisenga-droid]
+  #151 Fix: Pin @hiero-ledger/sdk to 2.88.0 for Solo < 0.44.0  [2026-09-29; by Ndacyayisenga-droid]
+  #150 ci: add ClusterFuzzLite fuzzing  [2026-10-07; by danielmarv]
+  #145 Fix solo versions+sha, fix Solo CLI/mirror-node CI flakiness, and update runner names  [2026-10-07; by Neurone]
+  #143 ci: pin Dockerfile base images by digest and add Dependabot config  [2026-09-29; by mgarbs]
+  #141 Expose raw ED25519 private key alongside existing DER output  [2026-07-15; by Ndacyayisenga-droid]
+  #140 Add nodeVersion input for Solo CLI installation  [2026-06-13; by Jexsie]
+  #138 fix: install Helm, update Kind/K8s, and select Solo npm package by version  [2026-05-28; by Ndacyayisenga-droid]
+  #137 chore: align default localhost ports with Solo 0.63+ versions  [2026-05-28; by Ndacyayisenga-droid]
+  #134 feat: add block node support  [2026-04-28; by venilinvasilev]
+  #119 fix: Use commit hash  [2025-11-25; by gsstoykov]
+  #117 feat: forward grpc web proxy port in dual mode  [2025-11-13; by venilinvasilev]
+  #114 feat: Introduce Dual Node Mode  [2025-11-10; by gsstoykov]
+  #113 feat: Support versions of solo prior to 0.44.0  [2025-10-17; by rbarker-dev]
+  #111 fix: restjava  [2025-10-16; by 0xivanov]
+  #106 feat: Introduce pinger to mirror-node deploy  [2025-08-29; by gsstoykov]
+  #104 Validate GRPC connections  [2025-09-05; by Ndacyayisenga-droid]
+  #103 feat: Expose java based mirror node API  [2025-08-28; by gsstoykov]
+  #101 feat: Introduce soloVersion input  [2025-08-27; by gsstoykov]
+
+== FOCUS REPO: hiero-json-rpc-relay ==
+(Links: https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/<number> works for issues and PRs.)
+
+-- Open PRs: 16 human, 10 bot --
+  #5880 feat: clean up relay  [REVIEW_REQUIRED; by natanasow; opened 7d ago; idle 0d; +9/-160158; labels: enhancement]
+  #5896 chore: bump Solo, consensus node, and mirror node versions  [REVIEW_REQUIRED; by swirlds-automation; opened 0d ago; idle 0d; +2/-2; labels: process]
+  #4980 feat: return only touched slots on `debug_traceTransaction` with prestateTracer  [DRAFT; by natanasow; opened 237d ago; idle 2d; +222/-1; labels: enhancement]
+  #5891 test: add HTTP vs WebSocket transport parity tests  [REVIEW_REQUIRED; by tgntr; opened 4d ago; idle 3d; +506/-9; labels: enhancement, process]
+  #5803 chore: align Code of Conduct reference with LFDT standard  [REVIEW_REQUIRED; by danielmarv; opened 26d ago; idle 20d; +3/-8]
+  #5804 feat: pre-consensus rejected transactions are not shown as `-32003` error in `eth_getTransactionReceipt`  [CHANGES_REQUESTED; by natanasow; opened 26d ago; idle 20d; +167/-180; labels: enhancement]
+  #5687 ci: harden workflow token permissions, pin dependencies, add property-based tests  [REVIEW_REQUIRED; by mgarbs; opened 53d ago; idle 49d; +260/-10]
+  #5372 feat: automate performance testing in CI pipeline  [REVIEW_REQUIRED; by prakharsingh-74; opened 167d ago; idle 84d; +252/-4; labels: perf]
+  #5324 perf: parallelize address resolution in prepareTransactionArray  [REVIEW_REQUIRED; by Gitjay11; opened 180d ago; idle 116d; +337/-11]
+  #4813 feat: eth_getTransactionReceipt now throws -32003 on consensus errors  [NO_REVIEW_DECISION; by simzzz; opened 273d ago; idle 122d; +230/-5; labels: enhancement]
+  #5178 feat: baseFeePerGas is not a constant  [REVIEW_REQUIRED; by bootcodes; opened 207d ago; idle 122d; +1282/-121; labels: enhancement, paused]
+  #5278 fix: resolve lint errors across repo and strengthen CI enforcement (3/3)  [REVIEW_REQUIRED; by bootcodes; opened 186d ago; idle 122d; +385/-349; labels: enhancement]
+  #5313 feat: poller service locks (#5258) [PoC]  [DRAFT; by jasuwienas; opened 181d ago; idle 122d; +97/-35; labels: enhancement]
+  #5333 feat: hardhat viem example   add hardhat 3 support (#5331)  [REVIEW_REQUIRED; by jasuwienas; opened 178d ago; idle 122d; +2236/-2068; labels: enhancement]
+  #5357 refactor: clean up getBalance archival balance resolution logic  [CHANGES_REQUESTED; by prakharsingh-74; opened 171d ago; idle 138d; +28/-20]
+  #4802 Remove SERVER_PORT from configuration options  [REVIEW_REQUIRED; by Ferparishuertas; opened 278d ago; idle 259d; +0/-1]
+
+-- Open issues: 53 total; 18 active in the last 30 days (listed), 35 older --
+  #5897 NEW Revisit Codecov setup to improve reporting on PRs  [UNASSIGNED; labels: process, internal; milestone: 0.81.0; 0 comments; updated 0d ago; opened 0d ago]
+  #5258 Add locking to PollerService  [tgntr; labels: enhancement; milestone: 0.79.0; 0 comments; updated 0d ago; opened 188d ago]
+  #5867 EVM state and block hash survive the SHA-384 to SHA-256 consensus node upgrade  [ValentinVPK; 3 comments; updated 3d ago; opened 11d ago]
+  #5637 Deprecate HBAR limitter  [UNASSIGNED; labels: enhancement; 1 comments; updated 3d ago; opened 67d ago]
+  #4844 BlocksCout indexing from genesis in Testnet  [Ferparishuertas; 2 comments; updated 6d ago; opened 264d ago]
+  #5802 Pre Consensus rejected transactions are not shown as -32003 error in eth_getTransactionReceipt  [natanasow; labels: enhancement; milestone: 0.80.0; 1 comments; updated 6d ago; opened 26d ago]
+  #5835 Read `receipts_root` from the Mirror Node instead of calculating it per request  [UNASSIGNED; labels: enhancement; 0 comments; updated 6d ago; opened 18d ago]
+  #4920 Return only  touched slots in the `debug_trace*` methods using `prestateTracer`  [UNASSIGNED; labels: enhancement; 4 comments; updated 6d ago; opened 248d ago]
+  #5476 Feature req: Implement `eth_simulateV1` for Hedera precompile simulation  [UNASSIGNED; 2 comments; updated 6d ago; opened 130d ago]
+  #5113 [A4 EPIC] eth_debugTraceCall  [UNASSIGNED; 1 comments; updated 6d ago; opened 214d ago]
+  #5105 [A4 EPIC] Blockscout rollout on  Previewnet and Testnet  [UNASSIGNED; 0 comments; updated 6d ago; opened 214d ago]
+  #5379 [FEATURE] Heliswap Test Suite via JSON RPC Relay with Automated Performance & Diagnostic Data Collection  [Ferparishuertas; labels: enhancement; 1 comments; updated 6d ago; opened 165d ago]
+  #5856 Relay clean-up  [natanasow; labels: enhancement; milestone: 0.80.0; 0 comments; updated 6d ago; opened 12d ago]
+  #5360 Add explicit HTTP vs WebSocket JSON-RPC result parity tests in protocol acceptance suite  [tgntr; labels: enhancement; milestone: 0.80.0; 0 comments; updated 6d ago; opened 168d ago]
+  #4580 Investigate potential regression with failing regression tests  [ValentinVPK; labels: bug; milestone: 0.79.0; 5 comments; updated 19d ago; opened 348d ago]
+  #5823 [Blocked by MN] Support blockOverrides in `eth_call` and `eth_estimateGas`  [UNASSIGNED; labels: enhancement; 0 comments; updated 19d ago; opened 20d ago]
+  #5824 [Blocked by MN] Support `movePrecompileToAddress` in the `eth_call` and `eth_estimateGas` state override set  [UNASSIGNED; labels: enhancement; 0 comments; updated 19d ago; opened 20d ago]
+  #3674 [Track] Mirror Node endpoint improvements for the Relay  [natanasow; labels: Epic; 1 comments; updated 25d ago; opened 556d ago]
+  Older open issues: 35 (27 unassigned). Top labels: enhancement 8, github_action 3, bug 3, internal 2, Audit 2, documentation 1, Team Promoted 1, Epic 1
+  Milestones: 0.79.0 (5 open), 0.80.0 (3 open), 0.81.0 (1 open), 0.32.0 (1 open)
+
+-- Recently merged (last 20, bots and dependency bumps removed) --
+  #5895 feat: cherry-pick fix `eth_getTransactionCount` race condition to 0.80  [2026-10-16; by natanasow]
+  #5894 feat: fix `eth_getTransactionCount` race condition  [2026-10-16; by natanasow]
+  #5888 chore(release): Bump versions for v0.81.0-SNAPSHOT  [2026-10-14; by swirlds-automation]
+  #5878 feat: return -32602 from eth_getLogs for block ranges beyond head  [2026-10-13; by tgntr]
+  #5875 feat: block Mirror Node blacklisted contracts in `eth_call` and `eth_estimateGas`  [2026-10-13; by ValentinVPK]
+  #5872 test: bump conformity suite to execution-apis v1.0.0-beta.7  [2026-10-13; by ValentinVPK]
+  #5869 feat: add `SEND_RAW_TRANSACTION_WAIT_TIME` config var  [2026-10-09; by natanasow]
+  #5864 fix: map mirror node y_parity to yParity in authorization list entries  [2026-10-08; by ValentinVPK]
+  #5857 fix: flaky CI tests and lost concurrent HBAR spend updates  [2026-10-13; by tgntr]
+  #5845 feat: add EIP-1898 support  [2026-10-08; by natanasow]
+  #5843 fix: wrong from and cumulativeGasUsed on synthetic receipts resolved by timestamp  [2026-10-13; by ValentinVPK]
+  #5832 feat: add REAL_IP_ADDRESS_MODE to stop forwarding-header IP spoofing  [2026-10-07; by tgntr]
+  #5831 fix: eth_getBalance returns wrong balances for recent blocks with allowance spends  [2026-10-02; by ValentinVPK]
+
+== SDK PARITY: merged in the last 30 days (compare against the focus SDKs) ==
+[hiero-sdk-java] 13 merged
+  #2998 chore: release 2.79.0  [2026-10-14]
+  #2996 refactor: Transaction handling  [2026-10-14]
+  #2995 ci: add TCK compatibility job  [2026-10-15]
+  #2986 docs: fix Discord links in contributing guide  [2026-10-13]
+  #2981 refactor: file append  [2026-10-02]
+  #2974 refactor: getSignatures  [2026-10-01]
+  #2967 chore: release 2.78.0  [2026-09-28]
+  #2966 feat: token balance  [2026-09-25]
+  #2963 feat(tck): add ping, mirror balance and AccountBalanceQuery deprecation methods  [2026-10-06]
+  #2962 chore(tck): remove Lombok by converting JSON-RPC params to records  [2026-09-30]
+  #2960 refactor:  sync getReceipt()/getRecord()  [2026-09-23]
+  #2956 docs: fix typo in Users and Maintainers guidelines section  [2026-09-21]
+  #2938 chore: replace JSR-305 with JSpecify for nullability  [2026-10-09]
+[hiero-sdk-js] 66 merged
+  #4559 chore: rename indicies to indices in the cryptography entropy helper  [2026-10-20]
+  #4558 fix: bind the mock gRPC servers to OS-assigned ports in unit tests  [2026-10-20]
+  #4548 fix: pin the default block node chart in solo-setup to one consensus node v0.73.0 supports  [2026-10-19]
+  #4546 test: allow a few ms below the 4321 ms mirror deadline in AccountBalanceDeprecation  [2026-10-19]
+  #4543 chore: fix the lint warnings in src/hooks and AccountInfoQuery  [2026-10-19]
+  #4542 chore: fix spelling mistakes in Query.js and Executable.js comments  [2026-10-19]
+  #4541 test: add IPv4Address unit tests  [2026-10-19]
+  #4537 ci: run Solo with the PR's SDK in a Solo Compatibility job  [2026-10-16]
+  #4536 test: surface the last error on request timeout and fail HIP-1300 tests fast  [2026-10-19]
+  #4534 ci: remove the unused Renovate workflow  [2026-10-15]
+  #4533 chore(release): v2.90.1  [2026-10-15]
+  #4532 build: stop publishing duplicate .d.ts and .proto files in @hiero-ledger/proto  [2026-10-16]
+  #4530 fix: Added unit tests for FileInfo and fixed two copy-paste JSDocs lines  [2026-10-15]
+  #4529 test: fix spelling mistakes in unit test comments and names  [2026-10-15]
+  #4525 fix(tck): stop turning ThresholdKey keys into an empty KeyList on @hiero-ledger/proto 2.32.0  [2026-10-15]
+  #4523 fix: Lower the sdk package size budget from 40 MB to 25 MB  [2026-10-15]
+  #4521 chore(release): v2.90.0  [2026-10-14]
+  #4520 fix: implemented unit tests for NftId and fixed the fromString() method  [2026-10-14]
+  #4519 build: stop embedding the source in the lib source maps  [2026-10-14]
+  #4514 fix(deps): drop unused dependencies  [2026-10-14]
+  #4513 test: add unit tests for List and fix its JSDoc warnings  [2026-10-14]
+  #4512 test: add unit tests for StatusError, PrecheckStatusError and ReceiptStatusError  [2026-10-14]
+  #4505 chore: fix spelling mistakes in examples  [2026-10-13]
+  #4504 test: add unit tests for rlpNumber helpers  [2026-10-13]
+  #4498 chore: fix spelling mistakes in entity ID, account and contract comments  [2026-10-13]
+  #4495 test: add unit tests for NetworkVersionInfo (#4489)  [2026-10-12]
+  #4493 docs: fix spelling mistakes in the manual  [2026-10-12]
+  #4482 test: add unit tests for ContractLogInfo  [2026-10-10]
+  #4481 test: add unit tests for AssessedCustomFee  [2026-10-10]
+  #4479 ci: add a TCK Compatibility job that runs after the required Build & Test jobs pass  [2026-10-12]
+  #4478 fix: stop generating the UMD source maps that doubled the published package  [2026-10-14]
+  #4477 fix: keep the subscribe time when a topic query retries before the first message  [2026-10-08]
+  #4475 chore: replace wildcard type in ManagedNode.compare with ChannelT  [2026-10-10]
+  #4472 ci: fail the build when a published package tarball exceeds its size budget  [2026-10-09]
+  #4471 fix: stop publishing the consensus-node submodule inside @hiero-ledger/proto  [2026-10-08]
+  #4469 test: add unit tests for SemanticVersion  [2026-10-10]
+  #4468 fix: rename misspelled siganture variables  [2026-10-12]
+  #4462 fix(examples): migrate custom-grpc-web-proxies-network from CRA to Vite  [2026-10-12]
+  #4457 fix(deps): bump react-native from 0.81.5 to 0.85.0 in the react-native example  [2026-10-16]
+  #4450 ci: connect the Solo consensus node port straight to the node  [2026-10-05]
+  #4449 fix: re-run each run once in dep-bot-prs rerun.sh and skip runs with a real failure  [2026-10-02]
+  #4447 ci: fail hung Solo test jobs fast and retry infrastructure failures  [2026-10-06]
+  #4446 chore: add dep-bot-prs slash command for sweeping Dependabot PRs  [2026-10-02]
+  #4412 fix: run a paid query's cost lookup with the query's own maxAttempts, backoff and logger  [2026-09-30]
+  #4410 test: wait for the mirror node in the DAB node account ID tests  [2026-10-01]
+  #4409 fix(examples): pin the chunked pub-sub start time and re-enable it in CI  [2026-10-01]
+  #4407 docs: link chunked example quarantine to follow-up  [2026-09-29]
+  #4405 feat: make local consensus and mirror endpoints configurable in tests and examples  [2026-09-29]
+  #4404 fix: keep node maxBackoff when cloning and adding nodes  [2026-09-29]
+  #4402 fix(deps): declare the protobufjs peer as a range and drop unused peer dependencies  [2026-10-08]
+  #4400 chore(release): v2.89.1  [2026-09-28]
+  #4399 fix: keep Long values exact when they come from a second copy of the long package  [2026-09-28]
+  #4397 fix(tck): use the local SDK build instead of a pinned npm version  [2026-09-28]
+  #4393 chore(release): v2.89.0  [2026-09-28]
+  #4392 fix: keep an explicit mirror retry policy on a loopback mirror node  [2026-09-28]
+  #4391 fix: keep int64 values above 2^53 exact in mirror node JSON  [2026-09-28]
+  #4390 fix: make balance examples mirror-ingestion safe  [2026-09-28]
+  #4388 feat(tck): add AccountBalanceQuery deprecation hook and mirror token balance method  [2026-09-25]
+  #4387 feat: shared HTTP transport layer for mirror node REST queries  [2026-09-25]
+  #4384 fix: settle AddressBookQueryWeb and RegisteredNodeAddressBookQuery execute() when setup throws  [2026-09-24]
+  #4382 fix: inherit maxBackoff from the client instead of hardcoding 8s in Executable  [2026-09-23]
+  #4381 fix: bound AddressBookQueryWeb requests with a default 30s timeout  [2026-09-24]
+  #4380 fix: stop retrying 4xx responses in AddressBookQueryWeb  [2026-09-24]
+  #4375 fix: reject unknown node account IDs instead of routing to a random node  [2026-09-23]
+  #4345 fix: serialize TokenBalanceMap balances as decimal strings  [2026-10-13]
+  #4332 feat: add getMirrorNodeAccountBalance JSON-RPC method to the TCK server  [2026-09-23]
+[hiero-sdk-go] 18 merged
+  #1868 feat(tck): add getFileInfo endpoint  [2026-10-16]
+  #1861 feat(tck): add getTransactionReceipt endpoint  [2026-10-13]
+  #1860 test: fix the flaky address book retry test and unit test the refresh  [2026-10-09]
+  #1857 feat(tck): Added tck endpoint for getScheduleInfo  [2026-10-09]
+  #1855 feat(tck): Added tck endpoint for deleteSchedule  [2026-10-07]
+  #1853 feat: Added Tck endpoint for getAccountInfo  [2026-10-06]
+  #1848 release: v2.85.1  [2026-09-29]
+  #1847 feat: fail AccountBalanceQuery Execute and GetCost without a network call  [2026-09-29]
+  #1846 release: v2.85.0  [2026-09-28]
+  #1844 refactor: move the examples and e2e tests off AccountBalanceQuery  [2026-09-28]
+  #1843 feat: add MirrorNodeTokenBalanceQuery  [2026-09-28]
+  #1841 feat(tck): add ping, mirror balance and AccountBalanceQuery deprecation methods  [2026-09-28]
+  #1835  feat: mark `AccountBalanceQuery` deprecated and warn on construction  [2026-09-25]
+  #1828 feat: route mirror-node REST through a shared HTTP transport  [2026-09-25]
+  #1825 refactor(tck): clone account balance maps  [2026-09-24]
+  #1824 refactor: remove constructScheduleProtobuf from TransactionInterface  [2026-09-23]
+  #1823 refactor: align `NftID` string handling with the other SDKs  [2026-09-23]
+  #1822 fix: reject entity ID strings with an empty checksum  [2026-09-23]
+[hiero-sdk-python] 22 merged
+  #2722 chore: Add tck method for `createNode` and `deleteNode`  [2026-10-13]
+  #2719 feat(tck): implement getMirrorNodeAccountBalance JSON-RPC method  [2026-10-13]
+  #2713 feat(tck): implement executeContract JSON-RPC method  [2026-10-17]
+  #2712 Update acount_info_query_e2e_test.py to use the shared env fixture  [2026-10-11]
+  #2709 feat(contract): add clear_auto_renew_account_id helper  [2026-10-12]
+  #2708 feat: restore file transaction fields from protobuf  [2026-10-19]
+  #2703 fix: Allow query cost estimation using `get_cost` without an operator  [2026-10-17]
+  #2689 test(unit): add bidirectional parity tests for ResponseCode  [2026-10-09]
+  #2682 feat: add signer-based signing with sign_with, sign_with_operator and set_operator_with  [2026-10-10]
+  #2681 feat(tck): implement updateTokenFeeSchedule JSON-RPC method  [2026-10-01]
+  #2676 feat(tck): implement deleteContract JSON-RPC method  [2026-10-02]
+  #2670 docs: fix broken markdown links  [2026-09-24]
+  #2667 feat: Added tck method for the contractInfoQuery  [2026-09-22]
+  #2664 feat(tck): add contractGetBytecode method and related parameter/response models  [2026-09-21]
+  #2660 feat: Update `Transaction.to_bytes()` to Serialize TransactionList  [2026-10-10]
+  #2656 feat: Implement MirrorNodeAccountBalanceQuery  [2026-10-11]
+  #2653 feat(tck): implement updateContract JSON-RPC method  [2026-09-28]
+  #2650 feat: implement client ping  [2026-10-13]
+  #2648 feat(tck): implement getScheduleInfo JSON-RPC method  [2026-09-24]
+  #2637 feat: Corrected the From_bytes Transaction-type Dispatch Map and Add …  [2026-09-23]
+  #2590 feat(tck): implement updateFile JSON-RPC method  [2026-09-22]
+  #2583 chore: Refactor FileUpdateTransaction to use Generic `Key` class  [2026-09-21]
+[hiero-sdk-rust] 0 merged
+[hiero-sdk-cpp] 0 merged
+[hiero-sdk-swift] 0 merged
+[hiero-sdk-tck] 13 merged
+  #754 docs: pin the action examples to v0.14.0  [2026-10-13]
+  #753 chore: release v0.14.0  [2026-10-12]
+  #749 feat: add a composite GitHub Action that runs the TCK against a running JSON-RPC server  [2026-10-12]
+  #734 test: block ClientPing proxy calls with UNAVAILABLE instead of closing the listener  [2026-10-02]
+  #732 ci: forward mirror REST to 38081 in Java compatibility workflow  [2026-10-02]
+  #726 ci: forward mirror REST to port 38081 for the Go SDK  [2026-09-29]
+  #725 chore: release v0.13.0  [2026-09-29]
+  #720 test: add MirrorNodeTokenBalanceQuery tests and zero/token-holder HBAR cases  [2026-09-25]
+  #719 test: replace the AccountBalanceQuery suite with Stage 2 deprecation checks  [2026-09-25]
+  #718 test: verify balances without the deprecated AccountBalanceQuery  [2026-09-25]
+  #712 fix: assert deletedAt in ScheduleInfoQuery deleted-schedule test  [2026-09-28]
+  #707 ci: harden workflows for OpenSSF Scorecard  [2026-10-07]
+  #689 test: add Client.ping() Stage 1 and AccountBalanceQuery Stage 2 deprecation tests  [2026-09-25]
+
+== YOUR WORK (jexsie) ==
+Your open PRs: 0
+Review requested from you: 0
+Assigned to you: 2
+  [hiero-sdk-js] #4515 Flaky integration test: HIP-1300 oversize transaction hangs until the 120 s timeout in the chromium suite  https://github.com/hiero-ledger/hiero-sdk-js/issues/4515
+  [hiero-solo-action] #81 Migrating from Composite to JavaScript GitHub Action  https://github.com/hiero-ledger/hiero-solo-action/issues/81
+Threads you're involved in with new activity: 6
+  [hiero-sdk-js] #4560 Make SDK class registration explicit so the SDK can be tree-shaken without breaking Transaction.fromBytes()  https://github.com/hiero-ledger/hiero-sdk-js/issues/4560
+  [hiero-sdk-js] #4558 fix: bind the mock gRPC servers to OS-assigned ports in unit tests  https://github.com/hiero-ledger/hiero-sdk-js/pull/4558
+  [hiero-sdk-js] #4548 fix: pin the default block node chart in solo-setup to one consensus node v0.73.0 supports  https://github.com/hiero-ledger/hiero-sdk-js/pull/4548
+  [hiero-sdk-js] #4536 test: surface the last error on request timeout and fail HIP-1300 tests fast  https://github.com/hiero-ledger/hiero-sdk-js/pull/4536
+  [hiero-sdk-js] #4526 task solo:setup fails: latest block node 0.43.0 refuses the default consensus node v0.73.0  https://github.com/hiero-ledger/hiero-sdk-js/issues/4526
+  [hiero-sdk-js] #4370 Flaky unit tests: ClientPingMocking fails with EADDRINUSE from deterministic mock gRPC ports  https://github.com/hiero-ledger/hiero-sdk-js/issues/4370
+
+== CONTRIBUTION CANDIDATES (focus repos only; unassigned, not blocked; top 6 per repo checked) ==
+Score: +2 contribution label, +2 HIP, +1 TCK, +1 active in 30 days.
+
+[hiero-sdk-js] 21 unassigned open issues
+  #4552 [Beginner]: Reject malformed strings in TransactionId.fromString and add tests  (score 3)
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4552
+    bug, hacktoberfest, beginner; 1 comments; updated 0d ago; opened 0d ago by Fantomasa
+    STATUS: POSSIBLY CLAIMED by akshat-lakhera 0d ago
+    > ### 🐥 Beginner Friendly This issue is a great fit for contributors who are ready to explore the Hiero JavaScript codebase a little more and take on slightly more independent work. We strongly recommend completing a [Good First Issue](https://github.com/hiero-ledger/hiero-sdk-js/issues?q=is%3Aissue%2…
+    last comment by akshat-lakhera (0d ago): I'd like to work on this. I'll add validation of the account, timestamp and nonce parts in TransactionId.fromString with clear errors, plus unit tests for each case in the table.
+  #4556 [Intermediate]: clearAccountMemo, clearFileMemo, clearContractMemo and clearTokenMemo do not clear the memo  (score 3)
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4556
+    bug, hacktoberfest, intermediate; 1 comments; updated 0d ago; opened 0d ago by Fantomasa
+    STATUS: POSSIBLY CLAIMED by akshat-lakhera 0d ago
+    > ## 🧩 Intermediate Friendly This issue is a good fit for contributors who are already familiar with the Hiero JS SDK and feel comfortable navigating the codebase. We strongly recommend completing two Beginner Issues before tackling an Intermediate Issue. Intermediate Issues often involve: - Exploring…
+    last comment by akshat-lakhera (0d ago): I'd like to work on this. I'll make the four clear*Memo methods set an empty string, fix the empty-memo handling in _fromProtobuf, and add the unit tests and changelog entry.
+  #4557 [Intermediate]: Fix flaky unit test: ClientMirrorNodeHttp deadline test fails when the runner stalls before the first request  (score 3)
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4557
+    bug, hacktoberfest, intermediate; 0 comments; updated 0d ago; opened 0d ago by Fantomasa
+    STATUS: looks free
+    > ## 🧩 Intermediate Friendly This issue is a good fit for contributors who are already familiar with the Hiero JS SDK and feel comfortable navigating the codebase. We strongly recommend completing two Beginner Issues before tackling an Intermediate Issue. Intermediate Issues often involve: - Exploring…
+  #4555 [Intermediate]: Entity ID fromString silently truncates IDs with letters (0.0.12ab34 becomes 0.0.12)  (score 3)
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4555
+    bug, hacktoberfest, intermediate; 0 comments; updated 0d ago; opened 0d ago by Fantomasa
+    STATUS: looks free
+    > ## 🧩 Intermediate Friendly This issue is a good fit for contributors who are already familiar with the Hiero JS SDK and feel comfortable navigating the codebase. We strongly recommend completing two Beginner Issues before tackling an Intermediate Issue. Intermediate Issues often involve: - Exploring…
+  #4554 [Beginner]: Add unit tests for ContractInfo and fix its JSDoc  (score 3)
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4554
+    hacktoberfest, beginner; 0 comments; updated 0d ago; opened 0d ago by Fantomasa
+    STATUS: looks free
+    > ### 🐥 Beginner Friendly This issue is a great fit for contributors who are ready to explore the Hiero JavaScript codebase a little more and take on slightly more independent work. We strongly recommend completing a [Good First Issue](https://github.com/hiero-ledger/hiero-sdk-js/issues?q=is%3Aissue%2…
+  #4553 [Beginner]: Replace wildcard Client<*, *> JSDoc types with Client<Channel, MirrorChannel>  (score 3)
+    https://github.com/hiero-ledger/hiero-sdk-js/issues/4553
+    hacktoberfest, beginner; 0 comments; updated 0d ago; opened 0d ago by Fantomasa
+    STATUS: looks free
+    > ### 🐥 Beginner Friendly This issue is a great fit for contributors who are ready to explore the Hiero JavaScript codebase a little more and take on slightly more independent work. We strongly recommend completing a [Good First Issue](https://github.com/hiero-ledger/hiero-sdk-js/issues?q=is%3Aissue%2…
+
+[hiero-sdk-tck] 148 unassigned open issues
+  #771 Proposal: Design of the Hiero TCK GitHub Action  (score 2)
+    https://github.com/hiero-ledger/hiero-sdk-tck/issues/771
+    no labels; 0 comments; updated 0d ago; opened 0d ago by manishdait
+    STATUS: looks free
+    > ### Description This issue proposes a discussion of the architecture and design of the **Hiero TCK GitHub Action**, a GitHub Action that enables SDK's to run the Hiero SDK Technology Compatibility Kit (TCK) against their SDK's JSON-RPC server in GitHub Actions. The goal is to establish a approach to…
+  #736 Epic: publish the TCK as a versioned CLI package on npm (@hiero-ledger/hiero-sdk-tck)  (score 2)
+    https://github.com/hiero-ledger/hiero-sdk-tck/issues/736
+    enhancement; 1 comments; updated 8d ago; opened 12d ago by Jexsie
+    STATUS: POSSIBLY CLAIMED by Jexsie 12d ago
+    > ## Problem Part of #320. Currently, the TCK can only be run from a clone of this repository, either through the npm scripts or by building the Docker image locally. The only prebuilt option is `ivaylogarnev/hiero-tck-client` on a personal Docker Hub account, and it hasn't been updated since `v0.3.0`…
+    last comment by Jexsie (12d ago): Hey @ddeskov-limechain @Fantomasa, If this sounds useful, I'd love to pick it up. Feel free to assign it to me. Worth keeping an eye on #735 too, so the CLI and the GitHub Action report results the sa…
+  #737 Publish the TCK Docker image under the hiero-ledger organization (`ghcr.io/hiero-ledger/hiero-sdk-tck`)  (score 2)
+    https://github.com/hiero-ledger/hiero-sdk-tck/issues/737
+    no labels; 0 comments; updated 12d ago; opened 12d ago by danielmarv
+    STATUS: looks free
+    > ## Problem Part of #320. Companion issue to #736. The README tells users to run the TCK from `ivaylogarnev/hiero-tck-client`, an image on a personal Docker Hub account: - It is built and pushed by hand with `task release-hiero-tck-client`. Older versions are kept only by retagging with `task tag-pre…
+  #714 Align Contract Bytecode Query method name with TCK specification  (score 2)
+    https://github.com/hiero-ledger/hiero-sdk-tck/issues/714
+    no labels; 0 comments; updated 29d ago; opened 29d ago by manishdait
+    STATUS: looks free
+    > **Description** The ContractBytecodeQuery Tck specification use method name as `contractGetBytecode`, but the current Tck implementation uses `contractByteCodeQuery`. See Here: - [ContractBytecodeQuery TCK Documentaion](https://github.com/hiero-ledger/hiero-sdk-tck/blob/main/docs/test-specifications…
+  #709 Refactor ConsensusInfoClient for clearer network handling  (score 1)
+    https://github.com/hiero-ledger/hiero-sdk-tck/issues/709
+    no labels; 1 comments; updated 12d ago; opened 42d ago by MonaaEid
+    STATUS: POSSIBLY CLAIMED by MonaaEid 42d ago; OPEN PR LINKED: https://github.com/hiero-ledger/hiero-sdk-tck/pull/644
+    > **problem:** - The current implementation of ConsensusInfoClient does not robustly handle multiple network configurations, leading to unclear defaults and limited error handling. Specifically: - Unsupported network values fail silently without clear error messages. - Custom network setups lack valid…
+    last comment by MonaaEid (42d ago): /assign
+  #713 Fix the ContractCallQuery test specification  (score 1)
+    https://github.com/hiero-ledger/hiero-sdk-tck/issues/713
+    no labels; 1 comments; updated 15d ago; opened 34d ago by manishdait
+    STATUS: POSSIBLY CLAIMED by mayanksinha17 15d ago
+    > **Description** The current test specification for `ContractCallQuery` expected output fields as given [here](https://github.com/hiero-ledger/hiero-sdk-tck/blob/main/docs/test-specifications/contract-service/ContractCallQuery.md#output-parameters). However, the TCK test currently uses `response.rawR…
+    last comment by mayanksinha17 (15d ago): Hi @manishdait, I'd like to work on this issue. I went through the current ContractCallQuery test specification and the mismatch between the documented output parameters and the current response.rawRe…
+
+[hiero-sdk-java] 14 unassigned open issues
+  #1268 Add HIP-631 Account Virtual Addresses Examples  (score 2)
+    https://github.com/hiero-ledger/hiero-sdk-java/issues/1268
+    enhancement, backlog, services, protobuf; 0 comments; updated 1021d ago; opened 1415d ago by SimiHunjan
+    STATUS: looks free
+    > ### Problem TBD ### Solution TBD ### Alternatives _No response_
+  #2873 Re-enable disabled tests in ContractFunctionParametersTest and MockingTest  (score 0)
+    https://github.com/hiero-ledger/hiero-sdk-java/issues/2873
+    no labels; 2 comments; updated 42d ago; opened 73d ago by ddeskov-limechain
+    STATUS: POSSIBLY CLAIMED by Yashisinghal285 42d ago
+    > Two unit tests are disabled with a bare `@Disabled` and no explanation: - `ContractFunctionParametersTest.bigIntChecks()` ("BigInteger checks") — `sdk/src/test/java/com/hedera/hashgraph/sdk/ContractFunctionParametersTest.java:517` - `MockingTest.defaultMaxQueryPaymentTest()` ("Client.setDefaultMaxQu…
+    last comment by MeghanBao (53d ago): Hi I'd like to help with it.
+    last comment by Yashisinghal285 (42d ago): /assign-me
+  #2884 version.txt on main must always contain a -SNAPSHOT version between releases  (score 0)
+    https://github.com/hiero-ledger/hiero-sdk-java/issues/2884
+    no labels; 1 comments; updated 42d ago; opened 63d ago by hendrikebbers
+    STATUS: POSSIBLY CLAIMED by Yashisinghal285 42d ago
+    > Today the release process sets `version.txt` to the version that is about to be released (e.g. `2.76.0`, commit `ab3fcb9`, "chore: release 2.76.0" #2880) and then leaves it there. As a result, `main` permanently carries a version number that has **already been published to Maven Central**. Every com…
+    last comment by Yashisinghal285 (42d ago): Hi @hendrikebbers, I'd like to work on this issue. I can take a look at updating the release workflow and documentation so that `main` consistently uses the next `-SNAPSHOT` version after releases. Th…
+  #2874 Clean up ContractFunctionResult construction HACK in TransactionRecord.fromProtobuf  (score 0)
+    https://github.com/hiero-ledger/hiero-sdk-java/issues/2874
+    no labels; 1 comments; updated 73d ago; opened 73d ago by ddeskov-limechain
+    STATUS: looks free
+    > `TransactionRecord.fromProtobuf` still carries this marker (`sdk/src/main/java/com/hedera/hashgraph/sdk/TransactionRecord.java:317`): ```java // HACK: This is a bit bad, any takers to clean this up var contractFunctionResult = transactionRecord.hasContractCallResult() ? new ContractFunctionResult(tr…
+    last comment by manishdait (73d ago): @ddeskov-limechain, @mustafauzunn I'll like to work on this
+  #1182 Client.close() times out if subscribing to mirror gRPC API  (score 0)
+    https://github.com/hiero-ledger/hiero-sdk-java/issues/1182
+    bug; 2 comments; updated 73d ago; opened 1465d ago by steven-sheehy
+    STATUS: looks free
+    > ### Description Attempting to close a `Client` in the middle of a mirror node gRPC API streaming query will block for `closeTimeout` then throw a timeout exception. Since you can't have a subscription without the `Channel` that the `Client` manages for it, it's expected that the SDK would register a…
+    last comment by steven-sheehy (1462d ago): It's even worse than originally believed because `SubscriptionHandle.unsubscribe()` is asynchronous. So even manually unsubscribing first doesn't guarantee that it completes before `Client.close()`. I…
+    last comment by aadityapaliwal (1147d ago): I am using latest version of the library (v2.27.0) and getting this error sometimes. What should be the possible solution? I am using below code. ``` fun getTransactionReceiptInfo(txnIdValue: ByteArra…
+  #2872 Complete HederaTrustManager certificate validation  (score 0)
+    https://github.com/hiero-ledger/hiero-sdk-java/issues/2872
+    no labels; 0 comments; updated 73d ago; opened 73d ago by ddeskov-limechain
+    STATUS: looks free
+    > `HederaTrustManager` (`sdk/src/main/java/com/hedera/hashgraph/sdk/HederaTrustManager.java`) is the `X509TrustManager` used for consensus-node TLS, and it is only a partial implementation: - `checkServerTrusted` only PEM-encodes each certificate in the chain and compares its SHA-384 hash against the …
+
+[solo] 58 unassigned open issues
+  #6237 Implement the first JS SDK lane of the Solo TCK  (score 2)
+    https://github.com/hiero-ledger/solo/issues/6237
+    no labels; 0 comments; updated 3d ago; opened 3d ago by ddeskov-limechain
+    STATUS: looks free
+    > ## Problem [SDK pilot #4537](https://github.com/hiero-ledger/hiero-sdk-js/pull/4537) proves that a candidate JS SDK can run inside Solo and act as a client of its deployed network. The orchestration currently lives in the SDK repository. The [Solo TCK initiative #4272](https://github.com/hiero-ledge…
+  #6234 Isolate Solo TCK changes from Solo release tooling and npm packaging  (score 2)
+    https://github.com/hiero-ledger/solo/issues/6234
+    no labels; 0 comments; updated 3d ago; opened 3d ago by ddeskov-limechain
+    STATUS: OPEN PR LINKED: https://github.com/hiero-ledger/solo/pull/6238, https://github.com/hiero-ledger/solo/pull/6244
+    > ## Problem The Solo TCK design places the kit under `tck/` in this repository with independent versioning and `tck-v*` tags. Solo's current release tooling does not isolate that kit: - `feat(tck)` and `fix(tck)` select a Solo release. Breaking TCK commits also match Solo's existing breaking-change r…
+  #6243 Support multiple mirror nodes in the same namespace  (score 1)
+    https://github.com/hiero-ledger/solo/issues/6243
+    P2-⏭️💎; 1 comments; updated 0d ago; opened 0d ago by ValentinVPK
+    STATUS: looks free
+    > ### Requested Feature Allow `solo mirror node add` to deploy a second mirror node in a namespace that already has one, with its own database, so each mirror node can import from a different source (e.g. one from the bucket, one from a Block Node). ### Business Need Tests that compare mirror nodes wi…
+    last comment by Ivo-Yankov (0d ago): Why a second mirror node add fails today: Beyond the two failures in the description, several things assume one mirror node per namespace: - The passwords secret name `mirror-passwords` is hardcoded i…
+  #6213 docs: document the Linux install script and the download-inspect-run option  (score 1)
+    https://github.com/hiero-ledger/solo/issues/6213
+    P1-💎, Documentation; 1 comments; updated 1d ago; opened 4d ago by Fantomasa
+    STATUS: POSSIBLY CLAIMED by mayanksinha17 1d ago; OPEN PR LINKED: https://github.com/hiero-ledger/solo/pull/6242
+    > ## Overview Releases since v0.92.0 publish `install.sh`, which installs the standalone Solo binary on Linux without Node.js: ```sh curl -fsSL https://github.com/hiero-ledger/solo/releases/latest/download/install.sh | sh ``` No user documentation mentions it yet. The README and the solo-docs setup pa…
+    last comment by mayanksinha17 (1d ago): Hi @Fantomasa, I'd like to work on #6213. I'll first review the existing Linux installer implementation and documentation, then prepare a focused documentation PR covering the installation methods, su…
+  #6241 Block Node 0.45.0: new TSS library, CN 0.79 GA pairing and TSS data reset  (score 1)
+    https://github.com/hiero-ledger/solo/issues/6241
+    no labels; 0 comments; updated 3d ago; opened 3d ago by AlfredoG87
+    STATUS: looks free
+    > BN 0.45.0 GA (hiero-ledger/hiero-block-node#3853, cherry-picked from 0.45.0-rc2) verifies TSS block proofs with hiero-cryptography 3.21.0. The TSS block signature and the ledger id change, so a BN 0.45.0+ cannot verify TSS blocks from a CN before 0.79.0 GA (which carries the library via cherry-pick)…
+  #6211 feat: build and publish a musl Linux SEA binary for Alpine  (score 1)
+    https://github.com/hiero-ledger/solo/issues/6211
+    New Feature, P1-💎; 0 comments; updated 3d ago; opened 4d ago by Fantomasa
+    STATUS: OPEN PR LINKED: https://github.com/hiero-ledger/solo/pull/6233
+    > ## Overview `installers/linux/install.sh` detects musl libc and downloads `solo-linux-x64-musl`, but the SEA build (`flow-build-sea.yaml`) only produces the glibc `solo-linux-x64`. On Alpine the install stops with `release <tag> has no Solo binary for this machine (solo-linux-x64-musl)` and tells th…
+
+[hiero-solo-action] 0 unassigned open issues
+
+[hiero-json-rpc-relay] 36 unassigned open issues
+  #5897 Revisit Codecov setup to improve reporting on PRs  (score 1)
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/5897
+    process, internal; 0 comments; updated 0d ago; opened 0d ago by tgntr
+    STATUS: looks free
+    > ### Context Codecov runs on every PR. Both unit and acceptance tests report coverage to it, and it posts a coverage report and coverage checks on the PR. ### Problem - The coverage changes it reports aren't always accurate. Some PRs show small drops even though their changes are well tested. - The P…
+  #5637 Deprecate HBAR limitter  (score 1)
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/5637
+    enhancement; 1 comments; updated 3d ago; opened 67d ago by natanasow
+    STATUS: looks free
+    > ### Problem A long time ago, the relayer paid for every Ethereum transaction (>6KB contract deploys were fully covered by the relay because of the old EthereumTransaction limit). We introduced the HBAR limiter for tracking and limiting users from abusing the relay. With the implementation of [HIP-10…
+    last comment by BikramBiswas786 (3d ago): Adding a short record here, since several limiter issues were closed in favour of this one (#5628, #5631, #5632, #5633). In case the limiter stays in the codebase for a while before removal, these are…
+  #5835 Read `receipts_root` from the Mirror Node instead of calculating it per request  (score 1)
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/5835
+    enhancement; 0 comments; updated 6d ago; opened 18d ago by ValentinVPK
+    STATUS: looks free
+    > ### Problem **As an operator of the relay,** I want block responses to read `receipts_root` from the Mirror Node instead of calculating it per request, so that `eth_getBlockByNumber` and `eth_getBlockByHash` stop paying for work the Mirror Node can do once at ingestion. Today the relay fetches every…
+  #4920 Return only  touched slots in the `debug_trace*` methods using `prestateTracer`  (score 1)
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/4920
+    enhancement; 4 comments; updated 6d ago; opened 248d ago by jasuwienas
+    STATUS: OPEN PR LINKED: https://github.com/hiero-ledger/hiero-json-rpc-relay/pull/4980
+    > ### Problem Right now, when we use prestateTracer, we return the full storage of the smart contract at that timestamp. In geth (besu and erigon works similarly) docs: https://geth.ethereum.org/docs/developers/evm-tracing/built-in-tracers `prestateTracer`: - Reexecutes the transaction - Tracks every …
+    last comment by Ferparishuertas (41d ago): will be fixed in https://hips.hedera.com/#hip-1485
+    last comment by ValentinVPK (19d ago): Blocked by Mirror Node: - Issue: https://github.com/hiero-ledger/hiero-mirror-node/issues/13537 - PR: https://github.com/hiero-ledger/hiero-mirror-node/pull/13582
+  #5476 Feature req: Implement `eth_simulateV1` for Hedera precompile simulation  (score 1)
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/5476
+    no labels; 2 comments; updated 6d ago; opened 130d ago by ella-quicknode
+    STATUS: looks free
+    > `eth_simulateV1` is currently stubbed out in the relay and always returns `-32601 (UNSUPPORTED_METHOD)`. Users who needs this method to simulate transactions involving Hedera precompiles (e.g. HTS at 0x167). `eth_call` works for single read-only precompile calls, but it does not cover the full `eth_…
+    last comment by Ferparishuertas (126d ago): This functionality is on the roadmap but no ETA yet. Will let you know once prioritized
+    last comment by ValentinVPK (19d ago): Blocked by Mirror node: - Issue: https://github.com/hiero-ledger/hiero-mirror-node/issues/13629 - PR: https://github.com/hiero-ledger/hiero-mirror-node/pull/13931
+  #5113 [A4 EPIC] eth_debugTraceCall  (score 1)
+    https://github.com/hiero-ledger/hiero-json-rpc-relay/issues/5113
+    no labels; 1 comments; updated 6d ago; opened 214d ago by Ferparishuertas
+    STATUS: looks free
+    > ## Problem eth_debugTraceCall is the keystone for debugging and tracing within the Ethereum ecosystem. On Hiero we do nit support this rpc method. ## Solution Implement the rpc method ## Scope / Plan - Mirror node will implement new rest endpoint or modify existing ones - The EVM product experience …
+    last comment by ValentinVPK (19d ago): Blocked by Mirror Node: - issue: https://github.com/hiero-ledger/hiero-mirror-node/issues/13538 - PR: https://github.com/hiero-ledger/hiero-mirror-node/pull/13654
+
+== BOT ACTIVITY IN WINDOW (counts only) ==
+  hiero-sdk-java: 9, hiero-mirror-node: 5, hiero-sdk-python: 4, solo-docs: 3, hiero-block-node: 2, hiero-gradle-conventions: 1, hiero-json-rpc-relay: 1, solo-charts: 1, heka-identity-platform: 1, hiero-sdk-js: 1
